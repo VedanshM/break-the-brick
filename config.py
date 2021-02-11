@@ -1,0 +1,4 @@
+HEIGHT, WIDTH = 25, 80
+
+FPS = 15
+DELAY = 1/FPS
