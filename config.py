@@ -11,3 +11,8 @@ BALL_STYLE = {
     'img': [["o"]],
     'vel': (1/FPS, 1/FPS),
 }
+
+PADDLE_STYLE = {
+    'char': '=',
+    'def_size': 4,
+}

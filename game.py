@@ -1,3 +1,4 @@
+from paddle import Paddle
 from ball import Ball
 from brick import Brick
 from gameobject import GameObject
@@ -16,10 +17,12 @@ class Game:
         game_ended = False
         brick = Brick(0, (10, 10))
         ball = Ball()
+        paddle = Paddle()
         while True:
             frame_st_time = time()
             self._screen.reset_board()
             ball.update_pos()
+            self._screen.add_object(paddle)
             self._screen.add_object(ball)
             self._screen.add_object(brick)
 
