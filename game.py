@@ -1,3 +1,4 @@
+from ball import Ball
 from brick import Brick
 from gameobject import GameObject
 from screen import Cell, Screen
@@ -14,13 +15,12 @@ class Game:
     def play(self):
         game_ended = False
         brick = Brick(0, (10, 10))
-        obj = GameObject(image=[[Cell('i') for _ in range(3)]],
-                         vel=(0, 0.6))
+        ball = Ball()
         while True:
             frame_st_time = time()
             self._screen.reset_board()
-            obj.update_pos()
-            self._screen.add_object(obj)
+            ball.update_pos()
+            self._screen.add_object(ball)
             self._screen.add_object(brick)
 
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
