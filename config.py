@@ -1,6 +1,6 @@
 HEIGHT, WIDTH = 25, 80
 
-FPS = 15
+FPS = 60
 DELAY = 1/FPS
 
 BRICKS_STYLE = [
@@ -14,5 +14,6 @@ BALL_STYLE = {
 
 PADDLE_STYLE = {
     'char': '=',
-    'def_size': 4,
+    'default_size': 4,
+    'init_vel': 20/FPS
 }
