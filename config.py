@@ -1,6 +1,6 @@
 HEIGHT, WIDTH = 25, 80
 
-FPS = 60
+FPS = 30
 DELAY = 1/FPS
 
 BRICKS_STYLE = [
@@ -9,7 +9,7 @@ BRICKS_STYLE = [
 
 BALL_STYLE = {
     'img': [["o"]],
-    'vel': (1/FPS, 1/FPS),
+    'vel': (5/FPS, 5/FPS),
 }
 
 PADDLE_STYLE = {

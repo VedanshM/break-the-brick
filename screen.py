@@ -1,3 +1,5 @@
+from paddle import Paddle
+from numpy.lib.npyio import BagObj
 from gameobject import GameObject
 from cell import Cell
 import config as cfg
@@ -28,22 +30,24 @@ class Screen:
     def reset_board(self):
         np.copyto(self._board, self._empty_board)
 
-    def add_object(self, object: GameObject) -> bool:
+    def add_object(self, obj: GameObject) -> bool:
         '''Add a game object to screen board
         '''
-        pos, img = object.pos, object.img
-        img: np.ndarray = img[:self._height - pos[0], :self._width-pos[1]]
+        img: np.ndarray = obj.img[0: self._height - obj.up_coord,
+                                  0: self._width - obj.left_coord]
 
-        if (img.shape[0] <= 0 or img.shape[1] <= 0) or (
-                pos[0] >= self._height or pos[1] >= self._width):
+        if ((img.shape[0] <= 0 or img.shape[1] <= 0) or
+            (obj.up_coord >= self._height or obj.left_coord >= self._width)
+            ):
             return False
         try:
-            self._board[pos[0]:pos[0]+img.shape[0],
-                        pos[1]:pos[1]+img.shape[1]] = img
+            self._board[obj.up_coord: obj.down_coord,
+                        obj.left_coord: obj.right_coord] = img
+
         except:
             print(img.shape)
             print(img)
-            print(pos)
+            print(obj.pos)
             raise ValueError
         return True
 
