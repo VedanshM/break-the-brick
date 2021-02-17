@@ -16,8 +16,8 @@ from time import sleep, time
 class Game:
     def __init__(self) -> None:
         self._screen = Screen()
-        self._bricks = [Brick(0, pos=(10, 10))]
-        self._balls = [Ball(pos=(20, 40),)]
+        self._bricks = [Brick(3, pos=(10, 10))]
+        self._balls = [Ball(pos=(20, 40), vel=(1/2, 1/2))]
         self._paddle = Paddle()
 
     @property
@@ -37,10 +37,15 @@ class Game:
                 hit_side = hit(ball, brick)
                 if hit_side in ['right', 'left']:
                     ball.deflect(multi_y=-1)
+                    brick.take_hit()
                 elif hit_side in ['up', 'down']:
                     ball.deflect(multi_x=-1)
+                    brick.take_hit()
                 elif hit_side is not None:
                     ball.deflect(multi_x=-1, multi_y=-1)
+                    brick.take_hit()
+
+        self._bricks = list(filter(lambda x: not x.to_remove(), self._bricks))
 
     def _collide_wall_ball(self):
         for ball in self._balls:
