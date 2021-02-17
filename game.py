@@ -16,7 +16,7 @@ from time import sleep, time
 class Game:
     def __init__(self) -> None:
         self._screen = Screen()
-        self._bricks = [Brick(0, (10, 10))]
+        self._bricks = [Brick(0, pos=(10, 10))]
         self._balls = [Ball(pos=(20, 40),)]
         self._paddle = Paddle()
 
@@ -48,7 +48,6 @@ class Game:
                 ball.deflect(multi_x=-1)
             if ball.down_coord + 1 >= self._screen.height and ball.is_moving_down:
                 ball.deflect(multi_x=-1)
-                1/0
             if ball.left_coord <= 0 and ball.is_moving_left:
                 ball.deflect(multi_y=-1)
             if ball.right_coord + 1 >= self._screen.width and ball.is_moving_right:

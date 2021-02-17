@@ -39,16 +39,18 @@ class Screen:
     def add_object(self, obj: GameObject) -> bool:
         '''Add a game object to screen board
         '''
+        if obj.img is None:
+            return False
         img: np.ndarray = obj.img[0: self._height - obj.up_coord,
                                   0: self._width - obj.left_coord]
 
         if ((img.shape[0] <= 0 or img.shape[1] <= 0) or
-                (obj.up_coord >= self._height or obj.left_coord >= self._width)
-                ):
+            (obj.up_coord >= self._height or obj.left_coord >= self._width)
+            ):
             return False
         try:
-            self._board[obj.up_coord: obj.down_coord +1,
-                        obj.left_coord: obj.right_coord +1] = img
+            self._board[obj.up_coord: obj.down_coord + 1,
+                        obj.left_coord: obj.right_coord + 1] = img
 
         except:
             print(img.shape)

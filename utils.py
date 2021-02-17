@@ -1,7 +1,21 @@
+from cell import Cell
 import sys
 import termios
 import atexit
 from select import select
+import numpy as np
+
+
+def create_img(data):
+    if data['img'] is None:
+        return None
+    basic_img = np.array(data['img'])
+    img = []
+    for row in basic_img:
+        for char in row:
+            img.append(Cell(char, fg=data['fg'], bg=data['bg']))
+    img = np.array(img).reshape(basic_img.shape)
+    return img
 
 
 class KBHit:
@@ -54,5 +68,6 @@ class KBHit:
         Clears the input buffer
         """
         termios.tcflush(sys.stdin, termios.TCIFLUSH)
+
 
 kbhit = KBHit()
