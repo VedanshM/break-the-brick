@@ -8,6 +8,7 @@ class GameObject:
         self._img = np.array(image)
         self._pos = np.array(pos, dtype=float)
         self._vel = np.array(vel, dtype=float)
+        self._to_remove = False
 
     @property
     def pos(self): return (int(self._pos[0]), int(self._pos[1]))
@@ -66,6 +67,14 @@ class GameObject:
 
     @property
     def left_coord(self) -> int: return self.pos[1]
+
+    def to_remove(self): return self._to_remove
+
+    def mark_to_remove(self):
+        if self._to_remove:
+            return False
+        self._to_remove = True
+        return True
 
     def update_pos(self):
         ''' Upadates the pos of the obj acc to the vel inside the obj '''

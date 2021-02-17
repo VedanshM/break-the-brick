@@ -45,8 +45,8 @@ class Screen:
                                   0: self._width - obj.left_coord]
 
         if ((img.shape[0] <= 0 or img.shape[1] <= 0) or
-            (obj.up_coord >= self._height or obj.left_coord >= self._width)
-            ):
+                (obj.up_coord >= self._height or obj.left_coord >= self._width)
+                ):
             return False
         try:
             self._board[obj.up_coord: obj.down_coord + 1,
@@ -59,6 +59,10 @@ class Screen:
             raise ValueError
         return True
 
+    @staticmethod
+    def clear_screen():
+        print(Screen.CLEAR_ALL + Screen.GOTO_0)
+
     def render(self):
         '''Renders the board to the stdout after clearing the screen
         '''
@@ -68,4 +72,5 @@ class Screen:
                 disp_str += str(cell)
             disp_str += '\n'
 
-        print(Screen.CLEAR_ALL + Screen.GOTO_0 + disp_str[:-1])
+        self.clear_screen()
+        print(disp_str[:-1])

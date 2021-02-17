@@ -18,7 +18,10 @@ class Game:
         self._screen = Screen()
         self._bricks = [Brick(3, pos=(10, 10))]
         self._paddle = Paddle()
+
         self._ball_released = False
+        self._game_over = False
+
         self._generate_init_ball()
         self._generate_init_stats()
 
