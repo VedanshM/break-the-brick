@@ -67,10 +67,11 @@ class Game:
             # 1/0
             if hit_side == 'down':
                 delta = (
-                    ball.left_coord - self._paddle.horizontal_mid)/self._paddle.sizex
+                    ball.left_coord - self._paddle.horizontal_mid)/self._paddle.sizey
                 inci_ang = np.math.atan(abs(ball.velx/ball.vely))
 
-                ref_ang = inci_ang * (1 + delta)
+                ref_ang = inci_ang*(1 + delta)
+                ref_ang = np.clip(ref_ang, - pi*0.9, pi*0.9)
                 ball.deflect(theta=pi - 2*ref_ang)
 
     def play(self):
