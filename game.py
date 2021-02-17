@@ -18,8 +18,9 @@ class Game:
         self._screen = Screen()
         self._bricks = [Brick(3, pos=(10, 10))]
         self._paddle = Paddle()
-        self._generate_init_ball()
         self._ball_released = False
+        self._generate_init_ball()
+        self._generate_init_stats()
 
     @property
     def _objects(self):
@@ -29,6 +30,17 @@ class Game:
         self._balls = [
             Ball(pos=(self._paddle.up_coord-1, self._paddle.horizontal_mid))
         ]
+
+    @property
+    def time_passed(self):
+        return round((time() - self._stats.start_time), 1)
+
+    def _generate_init_stats(self):
+        def stats(x): return x
+        stats.lives = cfg.INITIAL_LIVES
+        stats.start_time = time()
+        stats.score = 0
+        self._stats = stats
 
     def _handle_inp(self, ch: str):
         ch = ch.lower()
@@ -87,6 +99,12 @@ class Game:
                 ref_ang = np.clip(ref_ang, - pi*0.9, pi*0.9)
                 ball.deflect(theta=pi - 2*ref_ang)
 
+    def _render_score_board(self):
+        disp_str = (f"Lives: {self._stats.lives} "
+                    f"\t\tTime: {self.time_passed} "
+                    f"\t\tScore:{self._stats.score}")
+        print(disp_str)
+
     def play(self):
         game_ended = False
 
@@ -111,5 +129,4 @@ class Game:
 
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()
-            ball = self._balls[0]
-            print(ball.pos, ball._pos, ball._vel)
+            self._render_score_board()

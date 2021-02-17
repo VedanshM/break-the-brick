@@ -18,12 +18,12 @@ class Screen:
     def __init__(self) -> None:
         from os import popen
         rows, cols = tuple(map(int, popen('stty size', 'r').read().split()))
-        if rows < cfg.HEIGHT or cols < cfg.WIDTH:
+        if rows < cfg.GAME_HEIGHT or cols < cfg.GAME_WIDTH:
             print(Cell(col.Fore.RED, col.Back.WHITE,
-                       f"Screen size should be atleast {cfg.HEIGHT}x{cfg.WIDTH}"))
+                       f"Screen size should be atleast {cfg.GAME_HEIGHT}x{cfg.GAME_WIDTH}"))
             raise SystemExit
 
-        self._width, self._height = cfg.WIDTH, cfg.HEIGHT
+        self._width, self._height = cfg.GAME_WIDTH, cfg.GAME_HEIGHT
         self._empty_board = np.full((self._height, self._width), Cell())
         self._board = np.full((self._height, self._width), Cell())
 
@@ -68,4 +68,4 @@ class Screen:
                 disp_str += str(cell)
             disp_str += '\n'
 
-        print(Screen.CLEAR_ALL + Screen.GOTO_0 + disp_str)
+        print(Screen.CLEAR_ALL + Screen.GOTO_0 + disp_str[:-1])

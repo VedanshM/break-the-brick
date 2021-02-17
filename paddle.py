@@ -1,4 +1,4 @@
-from config import HEIGHT, PADDLE_STYLE, WIDTH
+from config import GAME_HEIGHT, PADDLE_STYLE, GAME_WIDTH
 from typing import Tuple
 import numpy as np
 
@@ -8,7 +8,7 @@ from gameobject import GameObject
 class Paddle(GameObject):
     '''class for ball in the game'''
 
-    def __init__(self, pos: Tuple = (0.9 * HEIGHT, WIDTH//2)) -> None:
+    def __init__(self, pos: Tuple = (0.9 * GAME_HEIGHT, GAME_WIDTH//2)) -> None:
         img = [[PADDLE_STYLE['char']
                 for _ in range(PADDLE_STYLE['default_size'])]]
         super().__init__(img, pos=pos, vel=(0, PADDLE_STYLE['init_vel']))
@@ -21,4 +21,4 @@ class Paddle(GameObject):
         self._vel[1] = -abs(self._vel[1]) if to_left else abs(self._vel[1])
         # print(to_left,self._vel)
         self._pos[1] = np.clip(self._pos[1] + self._vel[1],
-                               0, WIDTH - self.sizey)
+                               0, GAME_WIDTH - self.sizey)
