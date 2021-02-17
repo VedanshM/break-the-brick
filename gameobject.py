@@ -28,6 +28,22 @@ class GameObject:
     def is_moving_down(self) -> bool: return self._vel[1] > 0
 
     @property
+    def is_moving_leftdown(self) -> bool:
+        return self.is_moving_left and self.is_moving_down
+
+    @property
+    def is_moving_rightdown(self) -> bool:
+        return self.is_moving_right and self.is_moving_down
+
+    @property
+    def is_moving_leftup(self) -> bool:
+        return self.is_moving_left and self.is_moving_up
+
+    @property
+    def is_moving_rightup(self) -> bool:
+        return self.is_moving_right and self.is_moving_up
+
+    @property
     def up_coord(self) -> int: return self.pos[0]
 
     @property
@@ -48,7 +64,7 @@ class GameObject:
 
 def hit(obj1: GameObject, obj2: GameObject):
 
-    if ((obj1.is_moving_right or obj2.is_moving_left) and 
+    if ((obj1.is_moving_right or obj2.is_moving_left) and
             (obj1.right_coord - obj2.left_coord == -1 and
              obj2.up_coord <= obj1.down_coord <= obj2.down_coord)):
         return 'right'
@@ -65,4 +81,28 @@ def hit(obj1: GameObject, obj2: GameObject):
             (obj1.up_coord - obj2.down_coord == 1 and
              obj2.left_coord <= obj1.left_coord <= obj2.right_coord)):
         return 'up'
+    elif (
+        (obj1.is_moving_rightdown or obj2.is_moving_leftup) and
+        (obj1.right_coord - obj2.left_coord,
+         obj1.down_coord - obj2.up_coord) == (-1, -1)
+    ):
+        return 'rightdown'
+    elif (
+        (obj1.is_moving_rightup or obj2.is_moving_leftdown) and
+        (obj1.right_coord - obj2.left_coord,
+         obj1.up_coord - obj2.down_coord) == (-1, 1)
+    ):
+        return 'rightup'
+    elif (
+        (obj1.is_moving_leftdown or obj2.is_moving_rightup) and
+        (obj1.left_coord - obj2.right_coord,
+         obj1.down_coord - obj2.up_coord) == (1, -1)
+    ):
+        return 'leftdown'
+    elif (
+        (obj1.is_moving_leftup or obj2.is_moving_rightdown) and
+        (obj1.up_coord - obj2.down_coord,
+         obj1.left_coord - obj2.right_coord) == (1, 1)
+    ):
+        return 'leftup'
     return None

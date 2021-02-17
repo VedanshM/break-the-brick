@@ -1,4 +1,3 @@
-import sys
 from utils import kbhit
 from paddle import Paddle
 from ball import Ball
@@ -15,7 +14,7 @@ class Game:
     def __init__(self) -> None:
         self._screen = Screen()
         self._bricks = [Brick(0, (10, 10))]
-        self._balls = [Ball(pos=(10, 8))]
+        self._balls = [Ball(pos=(8,8), vel=(1/6, 1/6))]
         self._paddle = Paddle()
 
     @property
@@ -37,6 +36,8 @@ class Game:
                     ball.deflect(multi_y=-1)
                 elif hit_side in ['up', 'down']:
                     ball.deflect(multi_x=-1)
+                elif hit_side is not None:
+                    ball.deflect(multi_x=-1, multi_y=-1)
 
     def _collide_wall_ball(self):
         for ball in self._balls:
