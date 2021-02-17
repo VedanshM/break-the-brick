@@ -17,7 +17,7 @@ class Game:
     def __init__(self) -> None:
         self._screen = Screen()
         self._bricks = [Brick(3, pos=(10, 10))]
-        self._balls = [Ball(pos=(20, 40), vel=(1/2, 1/2))]
+        self._balls = [Ball(pos=(20, 40), vel=(1/6, 1/6))]
         self._paddle = Paddle()
 
     @property
@@ -68,13 +68,8 @@ class Game:
                 delta = (
                     ball.left_coord - self._paddle.horizontal_mid)/self._paddle.sizex
                 inci_ang = np.math.atan(abs(ball.velx/ball.vely))
-                ref_ang = inci_ang
 
-                if ball.is_moving_left:
-                    ref_ang += (pi/3) * (-delta)
-                else:
-                    ref_ang += (pi/3) * (delta)
-
+                ref_ang = inci_ang * (1 + delta)
                 ball.deflect(theta=pi - 2*ref_ang)
 
     def play(self):
