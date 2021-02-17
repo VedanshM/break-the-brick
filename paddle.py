@@ -13,8 +13,12 @@ class Paddle(GameObject):
                 for _ in range(PADDLE_STYLE['default_size'])]]
         super().__init__(img, pos=pos, vel=(0, PADDLE_STYLE['init_vel']))
 
+    @property
+    def horizontal_mid(self): return (self.right_coord + self.left_coord)/2
+
     def update_pos(self, to_left: bool = True):
         '''sets paddle to move left or right'''
         self._vel[1] = -abs(self._vel[1]) if to_left else abs(self._vel[1])
         # print(to_left,self._vel)
-        super().update_pos()
+        self._pos[1] = np.clip(self._pos[1] + self._vel[1],
+                               0, WIDTH - self.sizey)

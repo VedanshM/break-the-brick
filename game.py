@@ -1,3 +1,6 @@
+from math import pi
+
+from numpy.lib.function_base import angle
 from utils import kbhit
 from paddle import Paddle
 from ball import Ball
@@ -14,7 +17,7 @@ class Game:
     def __init__(self) -> None:
         self._screen = Screen()
         self._bricks = [Brick(0, (10, 10))]
-        self._balls = [Ball(pos=(8,8), vel=(1/6, 1/6))]
+        self._balls = [Ball(pos=(20, 40),)]
         self._paddle = Paddle()
 
     @property
@@ -45,10 +48,30 @@ class Game:
                 ball.deflect(multi_x=-1)
             if ball.down_coord + 1 >= self._screen.height and ball.is_moving_down:
                 ball.deflect(multi_x=-1)
+                1/0
             if ball.left_coord <= 0 and ball.is_moving_left:
                 ball.deflect(multi_y=-1)
             if ball.right_coord + 1 >= self._screen.width and ball.is_moving_right:
                 ball.deflect(multi_y=-1)
+
+    def _collide_ball_paddle(self):
+        for ball in self._balls:
+            hit_side = hit(ball, self._paddle)
+            # print(hit_side)
+            # print(self._paddle.up_coord, ball.down_coord, ball.is_moving_down)
+            # 1/0
+            if hit_side == 'down':
+                delta = (
+                    ball.left_coord - self._paddle.horizontal_mid)/self._paddle.sizex
+                inci_ang = np.math.atan(abs(ball.velx/ball.vely))
+                ref_ang = inci_ang
+
+                if ball.is_moving_left:
+                    ref_ang += (pi/3) * (-delta)
+                else:
+                    ref_ang += (pi/3) * (delta)
+
+                ball.deflect(theta=pi - 2*ref_ang)
 
     def play(self):
         game_ended = False
@@ -59,6 +82,7 @@ class Game:
 
             self._collide_bricks_ball()
             self._collide_wall_ball()
+            self._collide_ball_paddle()
 
             for ball in self._balls:
                 ball.update_pos()

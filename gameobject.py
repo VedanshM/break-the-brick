@@ -13,6 +13,18 @@ class GameObject:
     def pos(self): return (int(self._pos[0]), int(self._pos[1]))
 
     @property
+    def velx(self): return self._vel[0]
+
+    @property
+    def vely(self): return self._vel[1]
+
+    @property
+    def sizex(self): return self._img.shape[0]
+
+    @property
+    def sizey(self): return self._img.shape[1]
+
+    @property
     def img(self): return self._img
 
     @property
