@@ -1,6 +1,4 @@
 from math import pi
-
-from numpy.lib.function_base import angle
 from utils import kbhit
 from paddle import Paddle
 from ball import Ball
@@ -10,7 +8,7 @@ from screen import Cell, Screen
 import numpy as np
 import colorama as col
 import config as cfg
-from time import sleep, time
+from time import process_time_ns, sleep, time
 
 
 class Game:
@@ -21,6 +19,7 @@ class Game:
 
         self._ball_released = False
         self._game_over = False
+        self._game_won = None
 
         self._generate_init_ball()
         self._generate_init_stats()
@@ -61,6 +60,15 @@ class Game:
 
     def _remove_dead_bricks(self):
         self._bricks = list(filter(lambda x: not x.to_remove(), self._bricks))
+        if not self._bricks:
+            self._game_over = True
+            self._game_won = True
+
+    def _remove_lost_balls(self):
+        self._balls = list(filter(lambda x: not x.to_remove(), self._balls))
+        if not self._balls:
+            self._game_over = True
+            self._game_won = False
 
     def _collide_bricks_ball(self):
         for brick in self._bricks:
@@ -81,7 +89,7 @@ class Game:
             if ball.up_coord <= 0 and ball.is_moving_up:
                 ball.deflect(multi_x=-1)
             if ball.down_coord + 1 >= self._screen.height and ball.is_moving_down:
-                ball.deflect(multi_x=-1)
+                ball.mark_to_remove()
             if ball.left_coord <= 0 and ball.is_moving_left:
                 ball.deflect(multi_y=-1)
             if ball.right_coord + 1 >= self._screen.width and ball.is_moving_right:
@@ -107,17 +115,23 @@ class Game:
                     f"\t\tTime: {self.time_passed} "
                     f"\t\tScore:{self._stats.score}")
         print(disp_str)
+    
+    def _render_end_msg(self):
+        disp_str = "You Won !!" if self._game_won else "You lose :("
+        Screen.clear_screen()
+        print(disp_str)
 
     def play(self):
-        game_ended = False
-
-        while not game_ended:
+        while not self._game_over:
             frame_st_time = time()
             self._screen.reset_board()
 
             self._collide_bricks_ball()
             self._remove_dead_bricks()
+
             self._collide_wall_ball()
+            self._remove_lost_balls()
+
             self._collide_ball_paddle()
 
             for ball in self._balls:
@@ -133,3 +147,4 @@ class Game:
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()
             self._render_score_board()
+        self._render_end_msg()
