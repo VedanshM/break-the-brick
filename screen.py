@@ -27,6 +27,12 @@ class Screen:
         self._empty_board = np.full((self._height, self._width), Cell())
         self._board = np.full((self._height, self._width), Cell())
 
+    @property
+    def width(self): return self._width
+
+    @property
+    def height(self): return self._height
+
     def reset_board(self):
         np.copyto(self._board, self._empty_board)
 
@@ -37,8 +43,8 @@ class Screen:
                                   0: self._width - obj.left_coord]
 
         if ((img.shape[0] <= 0 or img.shape[1] <= 0) or
-            (obj.up_coord >= self._height or obj.left_coord >= self._width)
-            ):
+                (obj.up_coord >= self._height or obj.left_coord >= self._width)
+                ):
             return False
         try:
             self._board[obj.up_coord: obj.down_coord,

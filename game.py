@@ -63,6 +63,17 @@ class Game:
                 if GameObject.overlap(brick, ball):
                     handle_collison(brick, ball)
 
+    def _collide_wall_ball(self):
+        for ball in self._balls:
+            if ball.up_coord < 0:
+                ball.deflect(multi_x=-1)
+            if ball.down_coord > self._screen.height:
+                ball.deflect(multi_x=-1)
+            if ball.left_coord < 0:
+                ball.deflect(multi_y=-1)
+            if ball.right_coord > self._screen.width:
+                ball.deflect(multi_y=-1)
+
     def play(self):
         game_ended = False
 
@@ -71,6 +82,7 @@ class Game:
             self._screen.reset_board()
 
             self._collide_bricks_ball()
+            self._collide_wall_ball()
 
             for ball in self._balls:
                 ball.update_pos()
