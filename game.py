@@ -41,13 +41,13 @@ class Game:
 
     def _collide_wall_ball(self):
         for ball in self._balls:
-            if ball.up_coord < 0:
+            if ball.up_coord <= 0 and ball.is_moving_up:
                 ball.deflect(multi_x=-1)
-            if ball.down_coord > self._screen.height:
+            if ball.down_coord + 1 >= self._screen.height and ball.is_moving_down:
                 ball.deflect(multi_x=-1)
-            if ball.left_coord < 0:
+            if ball.left_coord <= 0 and ball.is_moving_left:
                 ball.deflect(multi_y=-1)
-            if ball.right_coord > self._screen.width:
+            if ball.right_coord + 1 >= self._screen.width and ball.is_moving_right:
                 ball.deflect(multi_y=-1)
 
     def play(self):

@@ -22,10 +22,10 @@ class GameObject:
     def is_moving_up(self) -> bool: return self._vel[0] < 0
 
     @property
-    def is_moving_right(self) -> bool: return self._vel[0] > 0
+    def is_moving_right(self) -> bool: return self._vel[1] > 0
 
     @property
-    def is_moving_down(self) -> bool: return self._vel[1] > 0
+    def is_moving_down(self) -> bool: return self._vel[0] > 0
 
     @property
     def is_moving_leftdown(self) -> bool:
