@@ -31,10 +31,10 @@ class GameObject:
     def up_coord(self) -> int: return self.pos[0]
 
     @property
-    def down_coord(self) -> int: return self.pos[0] + self.img.shape[0]
+    def down_coord(self) -> int: return self.pos[0] + self.img.shape[0] - 1
 
     @property
-    def right_coord(self) -> int: return self.pos[1] + self.img.shape[1]
+    def right_coord(self) -> int: return self.pos[1] + self.img.shape[1] - 1
 
     @property
     def left_coord(self) -> int: return self.pos[1]
@@ -43,18 +43,26 @@ class GameObject:
         ''' Upadates the pos of the obj acc to the vel inside the obj '''
         self._pos = np.around(self._pos + self._vel, 3)
 
-    @staticmethod
-    def overlap(obj1, obj2):
-        return not(
-            (obj1.up_coord >= obj2.down_coord) or
-            (obj2.up_coord >= obj1.down_coord) or
-            (obj2.left_coord >= obj1.right_coord) or
-            (obj1.left_coord >= obj2.right_coord)
-        )
+    # @staticmethod
 
-        # return not ((
-        #     pos1[0] > pos2[0] + size2[0]) or (
-        #     pos2[0] > pos1[0] + size1[0]) or (
-        #     pos1[1] > pos2[1] + size2[1]) or (
-        #     pos2[1] > pos1[1] + size1[1]
-        # ))
+
+def hit(obj1: GameObject, obj2: GameObject):
+
+    if ((obj1.is_moving_right or obj2.is_moving_left) and 
+            (obj1.right_coord - obj2.left_coord == -1 and
+             obj2.up_coord <= obj1.down_coord <= obj2.down_coord)):
+        return 'right'
+
+    elif ((obj1.is_moving_down or obj2.is_moving_up) and
+            (obj1.down_coord - obj2.up_coord == -1 and
+             obj2.left_coord <= obj1.left_coord <= obj2.right_coord)):
+        return 'down'
+    elif ((obj1.is_moving_left or obj2.is_moving_right) and
+            (obj1.left_coord - obj2.right_coord == 1 and
+             obj2.up_coord <= obj1.down_coord <= obj2.down_coord)):
+        return 'left'
+    elif ((obj1.is_moving_up or obj2.is_moving_down) and
+            (obj1.up_coord - obj2.down_coord == 1 and
+             obj2.left_coord <= obj1.left_coord <= obj2.right_coord)):
+        return 'up'
+    return None

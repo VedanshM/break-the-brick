@@ -17,3 +17,11 @@ PADDLE_STYLE = {
     'default_size': 4,
     'init_vel': 20/FPS
 }
+
+
+# # for debugging
+
+# FPS = 1
+# DELAY = 1/FPS
+# BALL_STYLE['vel'] = (0.1/FPS, 0.1/FPS)
+# BALL_STYLE['vel'] = (1/FPS, 1/FPS)

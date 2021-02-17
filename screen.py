@@ -47,8 +47,8 @@ class Screen:
                 ):
             return False
         try:
-            self._board[obj.up_coord: obj.down_coord,
-                        obj.left_coord: obj.right_coord] = img
+            self._board[obj.up_coord: obj.down_coord +1,
+                        obj.left_coord: obj.right_coord +1] = img
 
         except:
             print(img.shape)

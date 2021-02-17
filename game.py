@@ -3,7 +3,7 @@ from utils import kbhit
 from paddle import Paddle
 from ball import Ball
 from brick import Brick
-from gameobject import GameObject
+from gameobject import GameObject, hit
 from screen import Cell, Screen
 import numpy as np
 import colorama as col
@@ -15,7 +15,7 @@ class Game:
     def __init__(self) -> None:
         self._screen = Screen()
         self._bricks = [Brick(0, (10, 10))]
-        self._balls = [Ball(pos=(9, 9))]
+        self._balls = [Ball(pos=(10, 8))]
         self._paddle = Paddle()
 
     @property
@@ -30,38 +30,13 @@ class Game:
             self._paddle.update_pos(to_left=False)
 
     def _collide_bricks_ball(self):
-        def handle_collison(brick: Brick, ball: Ball):
-            if ball.is_moving_right:
-                if ball.right_coord > brick.left_coord:
-                    ball.deflect(multi_x=-1)
-
-                elif ball.down_coord > brick.up_coord and ball.is_moving_down:
-                    ball.deflect(multi_y=-1)
-
-                elif ball.up_coord < brick.down_coord and ball.is_moving_up:
-                    ball.deflect(multi_y=-1)
-
-                else:
-                    assert(False, 'collision maybe has not happened')
-            elif ball.is_moving_left:
-                if ball.left_coord < brick.right_coord:
-                    ball.deflect(multi_x=-1)
-
-                elif ball.is_moving_down and ball.down_coord > brick.up_coord:
-                    ball.deflect(multi_y=-1)
-
-                elif ball.is_moving_up and ball.up_coord < brick.down_coord:
-                    ball.deflect(multi_y=-1)
-
-                else:
-                    assert(False, 'collision maybe has not happened')
-            else:
-                assert(False, 'error in is_moving funcs')
-
         for brick in self._bricks:
             for ball in self._balls:
-                if GameObject.overlap(brick, ball):
-                    handle_collison(brick, ball)
+                hit_side = hit(ball, brick)
+                if hit_side in ['right', 'left']:
+                    ball.deflect(multi_y=-1)
+                elif hit_side in ['up', 'down']:
+                    ball.deflect(multi_x=-1)
 
     def _collide_wall_ball(self):
         for ball in self._balls:
