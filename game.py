@@ -92,7 +92,7 @@ class Game:
 
             if kbhit.kbhit():
                 self._handle_inp(kbhit.getch())
-            kbhit.clear()
+            # kbhit.clear()
 
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()

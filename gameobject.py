@@ -22,10 +22,10 @@ class GameObject:
     def is_moving_up(self) -> bool: return self._vel[0] < 0
 
     @property
-    def is_moving_right(self) -> bool: return not self.is_moving_left
+    def is_moving_right(self) -> bool: return self._vel[0] > 0
 
     @property
-    def is_moving_down(self) -> bool: return not self.is_moving_up
+    def is_moving_down(self) -> bool: return self._vel[1] > 0
 
     @property
     def up_coord(self) -> int: return self.pos[0]
@@ -41,7 +41,7 @@ class GameObject:
 
     def update_pos(self):
         ''' Upadates the pos of the obj acc to the vel inside the obj '''
-        self._pos = np.around(self._pos+  self._vel, 3)
+        self._pos = np.around(self._pos + self._vel, 3)
 
     @staticmethod
     def overlap(obj1, obj2):
