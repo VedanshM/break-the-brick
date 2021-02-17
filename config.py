@@ -32,7 +32,7 @@ BRICKS_STYLE = {
 
 BALL_STYLE = {
     'img': [["o"]],
-    'vel': (10/FPS, 10/FPS),
+    'vel': (-5/FPS, -5/FPS),
 }
 
 PADDLE_STYLE = {

@@ -1,4 +1,5 @@
 from math import atan, cos, pi, sin
+import paddle
 from config import BALL_STYLE
 from typing import Tuple
 import numpy as np
@@ -9,8 +10,17 @@ from gameobject import GameObject
 class Ball(GameObject):
     '''class for ball in the game'''
 
-    def __init__(self, pos: Tuple = (0, 0), vel: Tuple = BALL_STYLE['vel']) -> None:
-        super().__init__(BALL_STYLE['img'], pos=pos, vel=vel)
+    def __init__(self, pos: Tuple = (0, 0)) -> None:
+        super().__init__(BALL_STYLE['img'], pos=pos)
+
+    def start_moving(self):
+        self._vel = np.array(BALL_STYLE['vel'])
+
+    def update_pos(self, pdl: paddle.Paddle = None):
+        if pdl is None:
+            return super().update_pos()
+        else:
+            self._pos = (pdl.up_coord - 1, pdl.horizontal_mid)
 
     def deflect(self, theta: float = None, multi_x: float = 1, multi_y: float = 1):
         '''changes velocity of the ball using given multipliers or deflect theta degree A-CW'''

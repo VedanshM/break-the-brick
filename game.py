@@ -17,19 +17,32 @@ class Game:
     def __init__(self) -> None:
         self._screen = Screen()
         self._bricks = [Brick(3, pos=(10, 10))]
-        self._balls = [Ball(pos=(20, 40), vel=(1/6, 1/6))]
         self._paddle = Paddle()
+        self._generate_init_ball()
+        self._ball_released = False
 
     @property
     def _objects(self):
         return self._bricks + self._balls + [self._paddle]
 
+    def _generate_init_ball(self):
+        self._balls = [
+            Ball(pos=(self._paddle.up_coord-1, self._paddle.horizontal_mid))
+        ]
+
     def _handle_inp(self, ch: str):
         ch = ch.lower()
         if ch == 'a':
             self._paddle.update_pos(to_left=True)
-        if ch == 'd':
+            if not self._ball_released:
+                self._balls[0].update_pos(pdl=self._paddle)
+        elif ch == 'd':
             self._paddle.update_pos(to_left=False)
+            if not self._ball_released:
+                self._balls[0].update_pos(pdl=self._paddle)
+        elif ch == ' ':
+            self._ball_released = True
+            self._balls[0].start_moving()
 
     def _remove_dead_bricks(self):
         self._bricks = list(filter(lambda x: not x.to_remove(), self._bricks))
