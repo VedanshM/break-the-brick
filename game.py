@@ -31,6 +31,9 @@ class Game:
         if ch == 'd':
             self._paddle.update_pos(to_left=False)
 
+    def _remove_dead_bricks(self):
+        self._bricks = list(filter(lambda x: not x.to_remove(), self._bricks))
+
     def _collide_bricks_ball(self):
         for brick in self._bricks:
             for ball in self._balls:
@@ -44,8 +47,6 @@ class Game:
                 elif hit_side is not None:
                     ball.deflect(multi_x=-1, multi_y=-1)
                     brick.take_hit()
-
-        self._bricks = list(filter(lambda x: not x.to_remove(), self._bricks))
 
     def _collide_wall_ball(self):
         for ball in self._balls:
@@ -80,6 +81,7 @@ class Game:
             self._screen.reset_board()
 
             self._collide_bricks_ball()
+            self._remove_dead_bricks()
             self._collide_wall_ball()
             self._collide_ball_paddle()
 
