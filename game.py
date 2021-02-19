@@ -81,7 +81,7 @@ class Game:
                     ball.deflect(multi_x=-1)
                     brick.take_hit()
                 elif hit_side is not None:
-                    ball.deflect(multi_x=-1, multi_y=-1)
+                    ball.deflect(multi_x=1, multi_y=-1)
                     brick.take_hit()
 
     def _collide_wall_ball(self):
@@ -101,7 +101,7 @@ class Game:
             # print(hit_side)
             # print(self._paddle.up_coord, ball.down_coord, ball.is_moving_down)
             # 1/0
-            if hit_side == 'down':
+            if hit_side in ['down', 'rightdown', 'leftdown']:
                 delta = (
                     ball.left_coord - self._paddle.horizontal_mid)/self._paddle.sizey
                 inci_ang = np.math.atan(abs(ball.velx/ball.vely))
