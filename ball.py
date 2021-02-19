@@ -1,4 +1,5 @@
 from math import atan, cos, pi, sin
+from utils import create_img
 import paddle
 from config import BALL_STYLE
 from typing import Tuple
@@ -11,7 +12,7 @@ class Ball(GameObject):
     '''class for ball in the game'''
 
     def __init__(self, pos: Tuple = (0, 0)) -> None:
-        super().__init__(BALL_STYLE['img'], pos=pos)
+        super().__init__(create_img(BALL_STYLE), pos=pos)
 
     def start_moving(self):
         self._vel = np.array(BALL_STYLE['vel'])

@@ -34,16 +34,21 @@ BRICKS_STYLE = {
 }
 
 BALL_STYLE = {
-    'img': [["o"]],
+    'img': [["●"]],
+    'fg': colorama.Fore.RED,
+    'bg': colorama.Back.LIGHTYELLOW_EX,
     'vel': (-5/FPS, -5/FPS),
 }
 
 PADDLE_STYLE = {
-    'char': '=',
+    'char': '_',
     'default_size': 7,
+    'fg': colorama.Fore.WHITE,
+    'bg': colorama.Back.BLACK,
     'init_vel': 60/FPS
 }
-
+PADDLE_STYLE['img'] = [PADDLE_STYLE['char']
+                       for _ in range(PADDLE_STYLE['default_size'])]
 
 # # for debugging
 
