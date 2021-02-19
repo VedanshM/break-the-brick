@@ -2,7 +2,7 @@ from math import pi
 from utils import kbhit
 from paddle import Paddle
 from ball import Ball
-from brick import Brick
+from brick import Brick, basic_brick_layout
 from gameobject import GameObject, hit
 from screen import Cell, Screen
 import numpy as np
@@ -14,7 +14,7 @@ from time import process_time_ns, sleep, time
 class Game:
     def __init__(self) -> None:
         self._screen = Screen()
-        self._bricks = [Brick(3, pos=(10, 10))]
+        self._bricks = basic_brick_layout()
         self._paddle = Paddle()
 
         self._ball_released = False
@@ -115,7 +115,7 @@ class Game:
                     f"\t\tTime: {self.time_passed} "
                     f"\t\tScore:{self._stats.score}")
         print(disp_str)
-    
+
     def _render_end_msg(self):
         disp_str = "You Won !!" if self._game_won else "You lose :("
         Screen.clear_screen()
