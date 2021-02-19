@@ -15,20 +15,20 @@ class Game:
     def __init__(self) -> None:
         self._screen = Screen()
         self._bricks = basic_brick_layout()
-        self._paddle = Paddle()
 
         self._ball_released = False
         self._game_over = False
         self._game_won = None
 
-        self._generate_init_ball()
+        self._generate_init_ball_paddle()
         self._generate_init_stats()
 
     @property
     def _objects(self):
         return self._bricks + self._balls + [self._paddle]
 
-    def _generate_init_ball(self):
+    def _generate_init_ball_paddle(self):
+        self._paddle = Paddle()
         self._balls = [
             Ball(pos=(self._paddle.up_coord-1, self._paddle.horizontal_mid))
         ]
@@ -70,8 +70,13 @@ class Game:
     def _remove_lost_balls(self):
         self._balls = list(filter(lambda x: not x.to_remove(), self._balls))
         if not self._balls:
-            self._game_over = True
-            self._game_won = False
+            self._stats.lives -= 1
+            self._paddle = Paddle()
+            self._generate_init_ball_paddle()
+            self._ball_released = False
+            if not self._stats.lives:
+                self._game_over = True
+                self._game_won = False
 
     def _collide_bricks_ball(self):
         for brick in self._bricks:
@@ -120,7 +125,13 @@ class Game:
         print(disp_str)
 
     def _render_end_msg(self):
+        final_score = max(0, int(self._stats.score - self.time_passed/10))
         disp_str = "You Won !!" if self._game_won else "You lose :("
+        disp_str += '\n'
+        disp_str += '\n' + '\t Base score: \t' + str(self._stats.score)
+        disp_str += '\n' + '\t Time taken: \t' + str(self.time_passed)
+        disp_str += '\n'
+        disp_str += '\n' + '\t Final score: \t' + str(final_score)
         Screen.clear_screen()
         print(disp_str)
 
