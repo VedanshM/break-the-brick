@@ -59,7 +59,10 @@ class Game:
             self._balls[0].start_moving()
 
     def _remove_dead_bricks(self):
+        bricks_earlier = len(self._bricks)
         self._bricks = list(filter(lambda x: not x.to_remove(), self._bricks))
+        bricks_now = len(self._bricks)
+        self._stats.score += (bricks_earlier - bricks_now)*100
         if not self._bricks:
             self._game_over = True
             self._game_won = True
