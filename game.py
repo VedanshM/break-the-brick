@@ -86,6 +86,31 @@ class Game:
                 tmp.append(ball)
         self._balls = tmp
 
+    def _chain_explode(self, st_brick: Brick, bricks: List[Brick]):
+        new_dead_list = []
+
+        def is_adj(b1: Brick, b2: Brick):
+            return (
+                (b1.right_coord == b2.left_coord - 1 and b1.up_coord == b2.up_coord) or
+                (b1.left_coord == b2.right_coord + 1 and b1.up_coord == b2.up_coord) or
+                (b1.up_coord == b2.down_coord + 1 and b1.left_coord == b2.left_coord) or
+                (b1.down_coord == b2.up_coord -
+                 1 and b1.left_coord == b2.left_coord)
+            )
+
+        def mark_adj_dead(b: Brick):
+            neighs = [br for br in bricks if is_adj(b, br)]
+            for x in neighs:
+                if x not in new_dead_list:
+                    new_dead_list.append(x)
+                    if x.is_exploding:
+                        mark_adj_dead(x)
+
+        mark_adj_dead(st_brick)
+        new_rem_list = [x for x in bricks if x not in new_dead_list]
+
+        return new_dead_list, new_rem_list
+
     @property
     def time_passed(self):
         return round((time() - self._stats.start_time), 1)
@@ -120,6 +145,15 @@ class Game:
                 dead_list.append(brick)
             else:
                 remain_bricks.append(brick)
+
+        for deadBrick in [x for x in dead_list if x.is_exploding]:
+            new_dead, new_rem = self._chain_explode(
+                deadBrick, remain_bricks)
+
+            dead_list += [x for x in new_dead if x not in dead_list]
+            remain_bricks = [x for x in self._bricks if x not in dead_list]
+            assert(len(remain_bricks+dead_list) == len(self._bricks))
+
         self._bricks = remain_bricks
 
         for dead_brick in dead_list:

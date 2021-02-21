@@ -19,23 +19,32 @@ class Brick(GameObject):
         'grab': powerups.PaddleGrab_pu,
     }
 
-    def __init__(self, kind: int = 0, pos: Tuple = (0, 0), powerup: powerups.PowerUp = None):
+    def __init__(self, kind: int = 0,
+                 pos: Tuple = (0, 0),
+                 powerup: powerups.PowerUp = None,
+                 ):
+        self._kind = kind
         self._strength = BRICK_STRENGHTS[kind]
         self._powerup = None if powerup is None else (
             self.power_up_dict[powerup](pos)
         )
+        self._is_exploding = kind == 4
         super().__init__(create_img(
-            BRICKS_STYLE[self._strength]), pos=pos)
+            BRICKS_STYLE[kind]), pos=pos)
 
     def take_hit(self):
-        self._strength -= 1
+        self._strength = max(0, self._strength - 1)
+        self._kind = BRICK_STRENGHTS.index(self._strength)
         if self._strength <= 0:
             self.mark_to_remove()
             return
-        self._img = create_img(BRICKS_STYLE[self._strength])
+        self._img = create_img(BRICKS_STYLE[self._kind])
 
     @property
     def power_up(self): return self._powerup
+
+    @property
+    def is_exploding(self): return self._is_exploding
 
 
 def basic_brick_layout() -> List[Brick]:
@@ -50,7 +59,7 @@ def basic_brick_layout() -> List[Brick]:
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 20:
             brick = Brick(kind=1, pos=(i, j)) if i != 9+4 else(
-                Brick(kind=1, pos=(i, j), powerup='grab'))
+                Brick(kind=4, pos=(i, j), powerup='grab'))
             bricks.append(brick)
 
     for i in np.array(range(10)) + 4:
