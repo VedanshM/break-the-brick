@@ -1,5 +1,4 @@
 from utils import create_img
-from cell import Cell
 from config import BRICKS_STYLE, BRICK_STRENGHTS
 from typing import List, Tuple
 import numpy as np

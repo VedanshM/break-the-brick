@@ -1,18 +1,15 @@
 from math import pi
-from os import removedirs
 from powerups import PowerUp
 from typing import List
 from utils import kbhit
 from paddle import Paddle
 from ball import Ball
 from brick import Brick, basic_brick_layout
-from gameobject import GameObject, hit
-from screen import Cell, Screen
+from gameobject import hit
+from screen import Screen
 import numpy as np
-import colorama as col
 import config as cfg
-from time import process_time_ns, sleep, time
-import copy
+from time import sleep, time
 
 
 class Game:
@@ -92,28 +89,20 @@ class Game:
         def is_adj(b1: Brick, b2: Brick):
             for o1, o2 in [(b1, b2), (b2, b1)]:
                 if ((
-                        o1.down_coord + 1 == o2.up_coord and
-                        o2.left_coord - 1 <= o1.left_coord <= o2.right_coord+1)
-                        or (
-                        o1.up_coord - 1 == o2.down_coord and
-                        o2.left_coord - 1 <= o1.left_coord <= o2.right_coord+1)
-                        or (
-                        o1.left_coord - 1 == o2.right_coord and
-                        o1.up_coord - 1 <= o2.up_coord <= o1.up_coord + 1)
-                        or (
-                        o1.right_coord + 1 == o2.left_coord and
-                        o1.up_coord - 1 <= o2.up_coord <= o1.up_coord + 1)
-                    ):
+                            o1.down_coord + 1 == o2.up_coord and
+                            o2.left_coord - 1 <= o1.left_coord <= o2.right_coord+1)
+                            or (
+                            o1.up_coord - 1 == o2.down_coord and
+                            o2.left_coord - 1 <= o1.left_coord <= o2.right_coord+1)
+                            or (
+                            o1.left_coord - 1 == o2.right_coord and
+                            o1.up_coord - 1 <= o2.up_coord <= o1.up_coord + 1)
+                            or (
+                            o1.right_coord + 1 == o2.left_coord and
+                            o1.up_coord - 1 <= o2.up_coord <= o1.up_coord + 1)
+                        ):
                     return True
             return False
-
-            # return (
-            #     (b1.right_coord == b2.left_coord - 1 and b1.up_coord == b2.up_coord) or
-            #     (b1.left_coord == b2.right_coord + 1 and b1.up_coord == b2.up_coord) or
-            #     (b1.up_coord == b2.down_coord + 1 and b1.left_coord == b2.left_coord) or
-            #     (b1.down_coord == b2.up_coord -
-            #      1 and b1.left_coord == b2.left_coord)
-            # )
 
         def mark_adj_dead(b: Brick):
             neighs = [br for br in bricks if is_adj(b, br)]

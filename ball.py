@@ -1,6 +1,4 @@
-from math import atan, cos, pi, sin
-from time import sleep
-from powerups import FastBall_pu
+from math import cos,  sin
 from utils import create_img
 import paddle
 from config import BALL_STYLE

@@ -1,7 +1,6 @@
 from time import time
 from typing import Tuple
 from utils import create_img
-import game
 from config import POWERUP_GENERAL, POWERUP_STYLES
 import gameobject
 

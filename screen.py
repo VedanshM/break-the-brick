@@ -1,5 +1,3 @@
-from paddle import Paddle
-from numpy.lib.npyio import BagObj
 from gameobject import GameObject
 from cell import Cell
 import config as cfg
