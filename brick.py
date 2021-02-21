@@ -61,12 +61,16 @@ def basic_brick_layout() -> List[Brick]:
         for j in np.array(range(4))*3 + 20:
             if i == 13:
                 pow_up = 'dup' if j <= 23 else 'fast'
+            else:
+                pow_up = None
             bricks.append(Brick(kind=2, pos=(i, j),  powerup=pow_up))
 
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 36:
             if i == 13:
                 pow_up = 'thru' if j <= 39 else 'grab'
+            else:
+                pow_up = None
             bricks.append(Brick(kind=3, pos=(i, j),  powerup=pow_up))
 
     for i in np.array(range(2)) + 14:
