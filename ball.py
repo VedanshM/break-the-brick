@@ -11,8 +11,8 @@ from gameobject import GameObject
 class Ball(GameObject):
     '''class for ball in the game'''
 
-    def __init__(self, pos: Tuple = (0, 0)) -> None:
-        super().__init__(create_img(BALL_STYLE), pos=pos)
+    def __init__(self, pos: Tuple = (0, 0), vel=(0, 0)) -> None:
+        super().__init__(create_img(BALL_STYLE), pos=pos, vel=vel)
 
     def start_moving(self):
         self._vel = np.array(BALL_STYLE['vel'])

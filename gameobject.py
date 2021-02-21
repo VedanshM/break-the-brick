@@ -1,3 +1,4 @@
+from time import process_time_ns
 from typing import Tuple
 import numpy as np
 
@@ -61,9 +62,6 @@ class GameObject:
 
     @property
     def down_coord(self) -> int:
-        if self.__class__.__name__ == 'ExpandPaddle_pu':
-            print(self._pos)
-            print(self.img)
         return self.pos[0] + self.img.shape[0] - 1
 
     @property

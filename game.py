@@ -12,6 +12,7 @@ import numpy as np
 import colorama as col
 import config as cfg
 from time import process_time_ns, sleep, time
+import copy
 
 
 class Game:
@@ -46,6 +47,22 @@ class Game:
 
     def reset_paddle_size(self):
         return self._paddle.reset_size()
+
+    def duplicate_balls(self):
+        new_balls = []
+        for ball in self._balls:
+            newBall = Ball(pos=ball.pos, vel=(ball.velx, ball.vely))
+            newBall.deflect(multi_y=-1)
+            new_balls.append(newBall)
+        self._balls += new_balls
+
+    def rem_duplicate_balls(self):
+        tmp = []
+        tot_balls = len(self._balls)
+        for i, ball in enumerate(self._balls):
+            if i <= np.math.ceil(tot_balls/2):
+                tmp.append(ball)
+        self._balls = tmp
 
     @property
     def time_passed(self):
@@ -223,6 +240,4 @@ class Game:
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()
             self._render_score_board()
-            for p in self._activated_powerups:
-                print(time(), p.start_time)
         self._render_end_msg()

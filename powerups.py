@@ -48,3 +48,15 @@ class ShrinkPaddle_pu(PowerUp):
 
     def deactivate(self, game):
         game.reset_paddle_size()
+
+
+class DupliBall_pu(PowerUp):
+    def __init__(self,  pos: Tuple[int, int]):
+        super().__init__(img=create_img(POWERUP_STYLES[2]), pos=pos)
+
+    def activate(self, game):
+        self._st_time = time()
+        game.duplicate_balls()
+
+    def deactivate(self, game):
+        game.rem_duplicate_balls()
