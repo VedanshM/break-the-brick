@@ -16,9 +16,14 @@ class Ball(GameObject):
     def __init__(self, pos: Tuple = (0, 0), vel=(0, 0)) -> None:
         super().__init__(create_img(BALL_STYLE), pos=pos, vel=vel)
         self._is_speed_up = 0
+        self._org_vel = np.array(BALL_STYLE['vel'])
 
     def start_moving(self):
-        self._vel = np.array(BALL_STYLE['vel'])
+        self._vel = self._org_vel
+
+    def stop_moving(self):
+        self._org_vel = self._vel
+        self._vel = np.array([0, 0])
 
     def speed_up(self):
         if self._is_speed_up == 0:

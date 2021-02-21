@@ -53,7 +53,7 @@ PADDLE_STYLE['img'] = [PADDLE_STYLE['char']
 
 POWERUP_GENERAL = {
     'vel': (5/FPS, 0),
-    'timeout': 5,
+    'timeout': 15,
 }
 
 POWERUP_STYLES = [
@@ -79,6 +79,11 @@ POWERUP_STYLES = [
     },
     {
         'img': [['T']],
+        'fg': colorama.Fore.MAGENTA,
+        'bg':colorama.Back.LIGHTBLUE_EX
+    },
+    {
+        'img': [['P']],
         'fg': colorama.Fore.MAGENTA,
         'bg':colorama.Back.LIGHTBLUE_EX
     },

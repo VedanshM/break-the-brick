@@ -84,3 +84,15 @@ class ThruBall_pu(PowerUp):
 
     def deactivate(self, game):
         game.unset_thru_mode()
+
+
+class PaddleGrab_pu(PowerUp):
+    def __init__(self,  pos: Tuple[int, int]):
+        super().__init__(img=create_img(POWERUP_STYLES[5]), pos=pos)
+
+    def activate(self, game):
+        self._st_time = time()
+        game.set_paddle_grab()
+
+    def deactivate(self, game):
+        game.unset_paddle_grab()

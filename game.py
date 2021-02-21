@@ -24,6 +24,7 @@ class Game:
         self._game_over = False
         self._game_won = None
         self._thru_mode = 0
+        self._paddle_grab = 0
         self._on_screen_powerups: List[PowerUp] = []
         self._activated_powerups: List[PowerUp] = []
 
@@ -45,6 +46,12 @@ class Game:
 
     def unset_thru_mode(self):
         self._thru_mode -= 1
+
+    def set_paddle_grab(self):
+        self._paddle_grab += 1
+
+    def unset_paddle_grab(self):
+        self._paddle_grab -= 1
 
     def increase_paddle_size(self):
         return self._paddle.increase_size()
@@ -213,6 +220,9 @@ class Game:
                 ref_ang = inci_ang*(1 + delta)
                 ref_ang = np.clip(ref_ang, - pi*0.9, pi*0.9)
                 ball.deflect(theta=pi - 2*ref_ang)
+                if self._paddle_grab > 0:
+                    ball.stop_moving()
+                    self._ball_released = False
 
     def _render_score_board(self):
         disp_str = (f"Lives: {self._stats.lives} "
