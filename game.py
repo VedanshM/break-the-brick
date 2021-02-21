@@ -90,13 +90,30 @@ class Game:
         new_dead_list = []
 
         def is_adj(b1: Brick, b2: Brick):
-            return (
-                (b1.right_coord == b2.left_coord - 1 and b1.up_coord == b2.up_coord) or
-                (b1.left_coord == b2.right_coord + 1 and b1.up_coord == b2.up_coord) or
-                (b1.up_coord == b2.down_coord + 1 and b1.left_coord == b2.left_coord) or
-                (b1.down_coord == b2.up_coord -
-                 1 and b1.left_coord == b2.left_coord)
-            )
+            for o1, o2 in [(b1, b2), (b2, b1)]:
+                if ((
+                        o1.down_coord + 1 == o2.up_coord and
+                        o2.left_coord - 1 <= o1.left_coord <= o2.right_coord+1)
+                        or (
+                        o1.up_coord - 1 == o2.down_coord and
+                        o2.left_coord - 1 <= o1.left_coord <= o2.right_coord+1)
+                        or (
+                        o1.left_coord - 1 == o2.right_coord and
+                        o1.up_coord - 1 <= o2.up_coord <= o1.up_coord + 1)
+                        or (
+                        o1.right_coord + 1 == o2.left_coord and
+                        o1.up_coord - 1 <= o2.up_coord <= o1.up_coord + 1)
+                    ):
+                    return True
+            return False
+
+            # return (
+            #     (b1.right_coord == b2.left_coord - 1 and b1.up_coord == b2.up_coord) or
+            #     (b1.left_coord == b2.right_coord + 1 and b1.up_coord == b2.up_coord) or
+            #     (b1.up_coord == b2.down_coord + 1 and b1.left_coord == b2.left_coord) or
+            #     (b1.down_coord == b2.up_coord -
+            #      1 and b1.left_coord == b2.left_coord)
+            # )
 
         def mark_adj_dead(b: Brick):
             neighs = [br for br in bricks if is_adj(b, br)]
@@ -111,7 +128,7 @@ class Game:
 
         return new_dead_list, new_rem_list
 
-    @property
+    @ property
     def time_passed(self):
         return round((time() - self._stats.start_time), 1)
 

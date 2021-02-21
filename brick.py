@@ -71,7 +71,7 @@ def basic_brick_layout() -> List[Brick]:
             bricks.append(Brick(kind=3, pos=(i, j),  powerup=pow_up))
 
     for i in np.array(range(2)) + 14:
-        for j in np.array(range(7))*3 + 39:
+        for j in np.array(range(7))*3 + 40:
             bricks.append(Brick(kind=4, pos=(i, j)))
 
     for i in np.array(range(10)) + 4:
