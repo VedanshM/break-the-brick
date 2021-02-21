@@ -72,3 +72,15 @@ class FastBall_pu(PowerUp):
 
     def deactivate(self, game):
         game.reset_speed_balls()
+
+
+class ThruBall_pu(PowerUp):
+    def __init__(self,  pos: Tuple[int, int]):
+        super().__init__(img=create_img(POWERUP_STYLES[4]), pos=pos)
+
+    def activate(self, game):
+        self._st_time = time()
+        game.set_thru_mode()
+
+    def deactivate(self, game):
+        game.unset_thru_mode()

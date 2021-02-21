@@ -23,6 +23,7 @@ class Game:
         self._ball_released = False
         self._game_over = False
         self._game_won = None
+        self._thru_mode = 0
         self._on_screen_powerups: List[PowerUp] = []
         self._activated_powerups: List[PowerUp] = []
 
@@ -38,6 +39,12 @@ class Game:
         self._balls = [
             Ball(pos=(self._paddle.up_coord-1, self._paddle.horizontal_mid))
         ]
+
+    def set_thru_mode(self):
+        self._thru_mode += 1
+
+    def unset_thru_mode(self):
+        self._thru_mode -= 1
 
     def increase_paddle_size(self):
         return self._paddle.increase_size()
@@ -166,14 +173,23 @@ class Game:
             for ball in self._balls:
                 hit_side = hit(ball, brick)
                 if hit_side in ['right', 'left']:
-                    ball.deflect(multi_y=-1)
-                    brick.take_hit()
+                    if self._thru_mode > 0:
+                        brick.mark_to_remove()
+                    else:
+                        ball.deflect(multi_y=-1)
+                        brick.take_hit()
                 elif hit_side in ['up', 'down']:
-                    ball.deflect(multi_x=-1)
-                    brick.take_hit()
+                    if self._thru_mode > 0:
+                        brick.mark_to_remove()
+                    else:
+                        ball.deflect(multi_x=-1)
+                        brick.take_hit()
                 elif hit_side is not None:
-                    ball.deflect(multi_x=1, multi_y=-1)
-                    brick.take_hit()
+                    if self._thru_mode > 0:
+                        brick.mark_to_remove()
+                    else:
+                        ball.deflect(multi_x=1, multi_y=-1)
+                        brick.take_hit()
 
     def _collide_wall_ball(self):
         for ball in self._balls:
