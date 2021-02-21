@@ -48,6 +48,14 @@ class Game:
     def reset_paddle_size(self):
         return self._paddle.reset_size()
 
+    def speedup_balls(self):
+        for ball in self._balls:
+            ball.speed_up()
+
+    def reset_speed_balls(self):
+        for ball in self._balls:
+            ball.reset_speed()
+
     def duplicate_balls(self):
         new_balls = []
         for ball in self._balls:

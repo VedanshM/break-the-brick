@@ -1,4 +1,6 @@
 from math import atan, cos, pi, sin
+from time import sleep
+from powerups import FastBall_pu
 from utils import create_img
 import paddle
 from config import BALL_STYLE
@@ -13,9 +15,20 @@ class Ball(GameObject):
 
     def __init__(self, pos: Tuple = (0, 0), vel=(0, 0)) -> None:
         super().__init__(create_img(BALL_STYLE), pos=pos, vel=vel)
+        self._is_speed_up = False
 
     def start_moving(self):
         self._vel = np.array(BALL_STYLE['vel'])
+
+    def speed_up(self):
+        if not self._is_speed_up:
+            self._vel = np.array([self.velx, self.vely])*2
+            self._is_speed_up = True
+
+    def reset_speed(self):
+        if self._is_speed_up:
+            self._vel = np.array([self.velx, self.vely])/2
+            self._is_speed_up = False
 
     def update_pos(self, pdl: paddle.Paddle = None):
         if pdl is None:

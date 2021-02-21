@@ -60,3 +60,15 @@ class DupliBall_pu(PowerUp):
 
     def deactivate(self, game):
         game.rem_duplicate_balls()
+
+
+class FastBall_pu(PowerUp):
+    def __init__(self,  pos: Tuple[int, int]):
+        super().__init__(img=create_img(POWERUP_STYLES[3]), pos=pos)
+
+    def activate(self, game):
+        self._st_time = time()
+        game.speedup_balls()
+
+    def deactivate(self, game):
+        game.reset_speed_balls()

@@ -14,6 +14,7 @@ class Brick(GameObject):
         'expand': powerups.ExpandPaddle_pu,
         'shrink': powerups.ShrinkPaddle_pu,
         'dup': powerups.DupliBall_pu,
+        'fast': powerups.FastBall_pu,
     }
 
     def __init__(self, kind: int = 0, pos: Tuple = (0, 0), powerup: powerups.PowerUp = None):
@@ -47,7 +48,7 @@ def basic_brick_layout() -> List[Brick]:
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 20:
             brick = Brick(kind=1, pos=(i, j)) if i != 9+4 else(
-                Brick(kind=1, pos=(i, j), powerup='dup'))
+                Brick(kind=1, pos=(i, j), powerup='fast'))
             bricks.append(brick)
 
     for i in np.array(range(10)) + 4:
