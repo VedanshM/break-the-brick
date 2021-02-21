@@ -258,7 +258,7 @@ class Game:
                 inci_ang = np.math.atan(abs(ball.velx/ball.vely))
 
                 ref_ang = inci_ang*(1 + delta)
-                ref_ang = np.clip(ref_ang, - pi*0.9, pi*0.9)
+                ref_ang = np.clip(ref_ang, - pi*0.4, pi*0.4)
                 ball.deflect(theta=pi - 2*ref_ang)
                 if self._paddle_grab > 0:
                     ball.stop_moving()
