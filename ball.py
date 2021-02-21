@@ -15,20 +15,20 @@ class Ball(GameObject):
 
     def __init__(self, pos: Tuple = (0, 0), vel=(0, 0)) -> None:
         super().__init__(create_img(BALL_STYLE), pos=pos, vel=vel)
-        self._is_speed_up = False
+        self._is_speed_up = 0
 
     def start_moving(self):
         self._vel = np.array(BALL_STYLE['vel'])
 
     def speed_up(self):
-        if not self._is_speed_up:
+        if self._is_speed_up == 0:
             self._vel = np.array([self.velx, self.vely])*2
-            self._is_speed_up = True
+        self._is_speed_up += 1
 
     def reset_speed(self):
-        if self._is_speed_up:
+        self._is_speed_up -= 1
+        if self._is_speed_up == 0:
             self._vel = np.array([self.velx, self.vely])/2
-            self._is_speed_up = False
 
     def update_pos(self, pdl: paddle.Paddle = None):
         if pdl is None:
