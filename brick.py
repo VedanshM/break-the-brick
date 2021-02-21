@@ -52,19 +52,27 @@ def basic_brick_layout() -> List[Brick]:
 
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 4:
-            brick = Brick(kind=1, pos=(i, j)) if i != 9+4 else(
-                Brick(kind=1, pos=(i, j),  powerup='expand'))
-            bricks.append(brick)
+            if i == 13:
+                pow_up = 'expand' if j <= 7 else 'shrink'
+            else:
+                pow_up = None
+            bricks.append(Brick(kind=1, pos=(i, j),  powerup=pow_up))
 
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 20:
-            brick = Brick(kind=1, pos=(i, j)) if i != 9+4 else(
-                Brick(kind=4, pos=(i, j), powerup='grab'))
-            bricks.append(brick)
+            if i == 13:
+                pow_up = 'dup' if j <= 23 else 'fast'
+            bricks.append(Brick(kind=2, pos=(i, j),  powerup=pow_up))
 
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 36:
-            bricks.append(Brick(kind=3, pos=(i, j)))
+            if i == 13:
+                pow_up = 'thru' if j <= 39 else 'grab'
+            bricks.append(Brick(kind=3, pos=(i, j),  powerup=pow_up))
+
+    for i in np.array(range(2)) + 14:
+        for j in np.array(range(7))*3 + 39:
+            bricks.append(Brick(kind=4, pos=(i, j)))
 
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 52:
