@@ -1,3 +1,4 @@
+from cell import Cell
 from utils import create_img
 from config import GAME_HEIGHT, PADDLE_STYLE, GAME_WIDTH
 from typing import Tuple
@@ -22,3 +23,21 @@ class Paddle(GameObject):
         # print(to_left,self._vel)
         self._pos[1] = np.clip(self._pos[1] + self._vel[1],
                                0, GAME_WIDTH - self.sizey)
+
+    def increase_size(self):
+        baseCell: Cell = self._img[0][0]
+        width = PADDLE_STYLE['default_size'] + PADDLE_STYLE['delta']
+        ht = self._img.shape[0]
+        self._img = np.full((ht, width), baseCell)
+
+    def decrease_size(self):
+        baseCell: Cell = self._img[0][0]
+        width = PADDLE_STYLE['default_size'] - PADDLE_STYLE['delta']
+        ht = self._img.shape[0]
+        self._img = np.full((ht, width), baseCell)
+
+    def reset_size(self):
+        baseCell: Cell = self._img[0][0]
+        width = PADDLE_STYLE['default_size']
+        ht = self._img.shape[0]
+        self._img = np.full((ht, width), baseCell)

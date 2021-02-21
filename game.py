@@ -1,4 +1,7 @@
 from math import pi
+from os import removedirs
+from powerups import PowerUp
+from typing import List
 from utils import kbhit
 from paddle import Paddle
 from ball import Ball
@@ -19,19 +22,30 @@ class Game:
         self._ball_released = False
         self._game_over = False
         self._game_won = None
+        self._on_screen_powerups: List[PowerUp] = []
+        self._activated_powerups: List[PowerUp] = []
 
         self._generate_init_ball_paddle()
         self._generate_init_stats()
 
     @property
     def _objects(self):
-        return self._bricks + self._balls + [self._paddle]
+        return self._bricks + self._balls + [self._paddle] + self._on_screen_powerups
 
     def _generate_init_ball_paddle(self):
         self._paddle = Paddle()
         self._balls = [
             Ball(pos=(self._paddle.up_coord-1, self._paddle.horizontal_mid))
         ]
+
+    def increase_paddle_size(self):
+        return self._paddle.increase_size()
+
+    def decrease_paddle_size(self):
+        return self._paddle.decrease_size()
+
+    def reset_paddle_size(self):
+        return self._paddle.reset_size()
 
     @property
     def time_passed(self):
@@ -59,13 +73,57 @@ class Game:
             self._balls[0].start_moving()
 
     def _remove_dead_bricks(self):
-        bricks_earlier = len(self._bricks)
-        self._bricks = list(filter(lambda x: not x.to_remove(), self._bricks))
-        bricks_now = len(self._bricks)
-        self._stats.score += (bricks_earlier - bricks_now)*100
+        dead_list: List[Brick] = []
+        remain_bricks = []
+
+        for brick in self._bricks:
+            if brick.to_remove():
+                dead_list.append(brick)
+            else:
+                remain_bricks.append(brick)
+        self._bricks = remain_bricks
+
+        for dead_brick in dead_list:
+            if dead_brick.power_up:
+                self._on_screen_powerups.append(dead_brick.power_up)
+
+        self._stats.score += len(dead_list)*100
         if not self._bricks:
             self._game_over = True
             self._game_won = True
+
+    def _deactivate_powerups(self):
+        remain_powerups = []
+        for powerup in self._activated_powerups:
+            if time() - powerup.start_time >= powerup.time_out:
+                powerup.deactivate(self)
+            else:
+                remain_powerups.append(powerup)
+
+        self._activated_powerups = remain_powerups
+
+    def _collide_paddle_powerups(self):
+        picked = []
+        not_picked = []
+        for powerup in self._on_screen_powerups:
+            if powerup.down_coord == self._paddle.up_coord and (
+               self._paddle.right_coord >= powerup.left_coord >= self._paddle.left_coord
+               ):
+                picked.append(powerup)
+            else:
+                not_picked.append(powerup)
+
+        self._on_screen_powerups = not_picked
+        for powerup in picked:
+            powerup.activate(self)
+            self._activated_powerups.append(powerup)
+
+    def _remove_not_picked_powerups(self):
+        not_removed = []
+        for powerup in self._on_screen_powerups:
+            if powerup.down_coord < self._screen.height:
+                not_removed.append(powerup)
+        self._on_screen_powerups = not_removed
 
     def _remove_lost_balls(self):
         self._balls = list(filter(lambda x: not x.to_remove(), self._balls))
@@ -106,9 +164,6 @@ class Game:
     def _collide_ball_paddle(self):
         for ball in self._balls:
             hit_side = hit(ball, self._paddle)
-            # print(hit_side)
-            # print(self._paddle.up_coord, ball.down_coord, ball.is_moving_down)
-            # 1/0
             if hit_side in ['down', 'rightdown', 'leftdown']:
                 delta = (
                     ball.left_coord - self._paddle.horizontal_mid)/self._paddle.sizey
@@ -146,10 +201,17 @@ class Game:
             self._collide_wall_ball()
             self._remove_lost_balls()
 
+            self._deactivate_powerups()
+            self._collide_paddle_powerups()
+            self._remove_not_picked_powerups()
+
             self._collide_ball_paddle()
 
             for ball in self._balls:
                 ball.update_pos()
+
+            for powerup in self._on_screen_powerups:
+                powerup.update_pos()
 
             for obj in self._objects:
                 self._screen.add_object(obj)
@@ -161,4 +223,6 @@ class Game:
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()
             self._render_score_board()
+            for p in self._activated_powerups:
+                print(time(), p.start_time)
         self._render_end_msg()

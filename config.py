@@ -45,10 +45,29 @@ PADDLE_STYLE = {
     'default_size': 7,
     'fg': colorama.Fore.WHITE,
     'bg': colorama.Back.BLACK,
-    'init_vel': 60/FPS
+    'init_vel': 60/FPS,
+    'delta': 3
 }
 PADDLE_STYLE['img'] = [PADDLE_STYLE['char']
                        for _ in range(PADDLE_STYLE['default_size'])]
+
+POWERUP_GENERAL = {
+    'vel': (5/FPS, 0),
+    'timeout': 5,
+}
+
+POWERUP_STYLES = [
+    {
+        'img': [['E']],
+        'fg': colorama.Fore.MAGENTA,
+        'bg':colorama.Back.LIGHTBLUE_EX
+    },
+    {
+        'img': [['S']],
+        'fg': colorama.Fore.MAGENTA,
+        'bg':colorama.Back.LIGHTBLUE_EX
+    },
+]
 
 # # for debugging
 
