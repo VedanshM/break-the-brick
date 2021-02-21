@@ -141,6 +141,9 @@ class Game:
         elif ch == ' ':
             self._ball_released = True
             self._balls[0].start_moving()
+        elif ch == 'q':
+            self._game_over = True
+            self._game_won = False
 
     def _remove_dead_bricks(self):
         dead_list: List[Brick] = []
