@@ -1,0 +1,5 @@
+{
+    "python.languageServer": "Microsoft",
+    "editor.formatOnSaveMode": "modifications",
+    "files.autoSave": "onFocusChange"
+}

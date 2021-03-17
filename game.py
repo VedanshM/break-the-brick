@@ -24,6 +24,8 @@ class Game:
         self._paddle_grab = 0
         self._on_screen_powerups: List[PowerUp] = []
         self._activated_powerups: List[PowerUp] = []
+        self._lvl_st_time = 0
+        self._time_penalty = 0
 
         self._generate_init_ball_paddle()
         self._generate_init_stats()
@@ -119,7 +121,7 @@ class Game:
 
     @ property
     def time_passed(self):
-        return round((time() - self._stats.start_time), 1)
+        return round((time() - self._lvl_st_time), 1)
 
     def _generate_init_stats(self):
         def stats(x): return x
@@ -144,6 +146,9 @@ class Game:
         elif ch == 'q':
             self._game_over = True
             self._game_won = False
+        elif ch == 'v':
+            self._game_over = True
+            self._game_won = True
 
     def _remove_dead_bricks(self):
         dead_list: List[Brick] = []
@@ -278,17 +283,30 @@ class Game:
         print(disp_str)
 
     def _render_end_msg(self):
-        final_score = max(0, int(self._stats.score - self.time_passed/10))
+        final_score = max(0, int(self._stats.score - self._time_penalty/10))
         disp_str = "You Won !!" if self._game_won else "You lose :("
         disp_str += '\n'
         disp_str += '\n' + '\t Base score: \t' + str(self._stats.score)
-        disp_str += '\n' + '\t Time taken: \t' + str(self.time_passed)
+        disp_str += '\n' + '\t Time taken: \t' + str(self._time_penalty)
         disp_str += '\n'
         disp_str += '\n' + '\t Final score: \t' + str(final_score)
         Screen.clear_screen()
         print(disp_str)
 
+    def _setup_lvl(self, level: int = 1):
+        self._bricks = basic_brick_layout()
+        self._generate_init_ball_paddle()
+        self._ball_released = False
+        for pu in self._activated_powerups:
+            pu.deactivate(self)
+        self._thru_mode = 0
+        self._paddle_grab = 0
+        self._activated_powerups = []
+        self._on_screen_powerups = []
+
     def play(self):
+        cur_lvl = 1
+        self._lvl_st_time = time()
         while not self._game_over:
             frame_st_time = time()
             self._screen.reset_board()
@@ -321,4 +339,16 @@ class Game:
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()
             self._render_score_board()
+
+            if self._game_over and self._game_won and cur_lvl < 3:
+                self._time_penalty += self.time_passed
+                cur_lvl += 1
+                self._setup_lvl(cur_lvl)
+                self._game_over = False
+                self._game_won = False
+                self._screen.clear_screen()
+                print(f'\n\n Level {cur_lvl -1} Cleared !! GG...')
+                sleep(3)
+                self._lvl_st_time = time()
+
         self._render_end_msg()
