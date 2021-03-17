@@ -71,6 +71,9 @@ class GameObject:
 
     def to_remove(self): return self._to_remove
 
+    def change_pos(self, newpos):
+        self._pos = np.array(newpos)
+
     def mark_to_remove(self):
         if self._to_remove:
             return False
@@ -128,3 +131,4 @@ def hit(obj1: GameObject, obj2: GameObject):
     ):
         return 'leftup'
     return None
+ 

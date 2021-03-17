@@ -26,6 +26,7 @@ class Game:
         self._activated_powerups: List[PowerUp] = []
         self._lvl_st_time = 0
         self._time_penalty = 0
+        self._mv_down_time = 0
 
         self._generate_init_ball_paddle()
         self._generate_init_stats()
@@ -276,6 +277,21 @@ class Game:
                     ball.stop_moving()
                     self._ball_released = False
 
+                if time() - self._mv_down_time > cfg.MOVE_DOWN_TIME:
+                    self._move_bricks_down()
+                    self._mv_down_time = time()
+
+    def _move_bricks_down(self):
+        lowest_depth = -1
+        for brick in self._bricks:
+            brick.change_pos((brick.pos[0]+1, brick.pos[1]))
+            lowest_depth = max(lowest_depth, brick.pos[0])
+
+        if lowest_depth >= self._paddle.pos[0]:
+            self._game_over = True
+            self._game_won = False
+            self._stats.lives = 0
+
     def _render_score_board(self):
         disp_str = (f"Lives: {self._stats.lives} "
                     f"\t\tTime: {self.time_passed} "
@@ -306,7 +322,7 @@ class Game:
 
     def play(self):
         cur_lvl = 1
-        self._lvl_st_time = time()
+        self._mv_down_time = self._lvl_st_time = time()
         while not self._game_over:
             frame_st_time = time()
             self._screen.reset_board()
@@ -348,7 +364,7 @@ class Game:
                 self._game_won = False
                 self._screen.clear_screen()
                 print(f'\n\n Level {cur_lvl -1} Cleared !! GG...')
-                sleep(3)
-                self._lvl_st_time = time()
+                sleep(cfg.LVL_MSG_DELAY)
+                self._mv_down_time = self._lvl_st_time = time()
 
         self._render_end_msg()
