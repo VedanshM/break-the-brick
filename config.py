@@ -11,6 +11,7 @@ INITIAL_LIVES = 3
 MOVE_DOWN_TIME = 3
 LVL_MSG_DELAY = 3
 
+EXPLODING_BRICK_IDX = 4
 BRICK_STRENGHTS = [0, 1, 2, 3, 1, float('inf')]
 BRICKS_STYLE = [
     {'img': None,

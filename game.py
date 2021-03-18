@@ -339,6 +339,9 @@ class Game:
 
             self._collide_ball_paddle()
 
+            for brick in self._bricks:
+                brick.change_type_if_rainbow()
+
             for ball in self._balls:
                 ball.update_pos()
 

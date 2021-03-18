@@ -1,5 +1,5 @@
 from utils import create_img
-from config import BRICKS_STYLE, BRICK_STRENGHTS
+from config import BRICKS_STYLE, BRICK_STRENGHTS, EXPLODING_BRICK_IDX
 from typing import List, Tuple
 import numpy as np
 import powerups
@@ -21,17 +21,27 @@ class Brick(GameObject):
     def __init__(self, kind: int = 0,
                  pos: Tuple = (0, 0),
                  powerup: powerups.PowerUp = None,
+                 rainbow: bool = False
                  ):
         self._kind = kind
         self._strength = BRICK_STRENGHTS[kind]
         self._powerup = None if powerup is None else (
             self.power_up_dict[powerup](pos)
         )
-        self._is_exploding = kind == 4
+        self._is_exploding = kind == EXPLODING_BRICK_IDX
+        self._is_rainbow = rainbow
         super().__init__(create_img(
             BRICKS_STYLE[kind]), pos=pos)
 
+    def change_type_if_rainbow(self):
+        if self._is_rainbow:
+            self._kind = max(1, (self._kind+1) % EXPLODING_BRICK_IDX)
+            self._strength = BRICK_STRENGHTS[self._kind]
+            self._img = create_img(BRICKS_STYLE[self._kind])
+
+
     def take_hit(self):
+        self._is_rainbow = False
         self._strength = max(0, self._strength - 1)
         self._kind = BRICK_STRENGHTS.index(self._strength)
         if self._strength <= 0:
@@ -63,7 +73,8 @@ def basic_brick_layout() -> List[Brick]:
                 pow_up = 'dup' if j <= 23 else 'fast'
             else:
                 pow_up = None
-            bricks.append(Brick(kind=2, pos=(i, j),  powerup=pow_up))
+            bricks.append(Brick(kind=2, pos=(i, j),
+                                powerup=pow_up, rainbow=True))
 
     for i in np.array(range(10)) + 4:
         for j in np.array(range(4))*3 + 36:
