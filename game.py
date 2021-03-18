@@ -1,3 +1,4 @@
+from bullets import Bullet
 from math import pi
 from powerups import PowerUp
 from typing import List
@@ -24,6 +25,7 @@ class Game:
         self._paddle_grab = 0
         self._on_screen_powerups: List[PowerUp] = []
         self._activated_powerups: List[PowerUp] = []
+        self._bullets: List[Bullet] = []
         self._lvl_st_time = 0
         self._time_penalty = 0
         self._mv_down_time = 0
@@ -34,7 +36,8 @@ class Game:
 
     @property
     def _objects(self):
-        return self._bricks + self._balls + [self._paddle] + self._on_screen_powerups
+        return (self._bricks + self._balls + [self._paddle]
+                + self._on_screen_powerups + self._bullets)
 
     def _generate_init_ball_paddle(self):
         self._paddle = Paddle()
@@ -274,6 +277,24 @@ class Game:
                         ball.deflect(multi_x=1, multi_y=-1)
                         brick.take_hit()
 
+    def _collide_bullet_brick(self):
+        for brick in self._bricks:
+            for bullet in self._bullets:
+                hit_side = hit(bullet, brick)
+                if hit_side is not None:
+                    self._hit_vel = cfg.POWERUP_GENERAL['vel']
+                    bullet.mark_to_remove()
+                    brick.take_hit()
+
+    def _remove_marked_bullets(self):
+        self._bullets = list(
+            filter(lambda x: not x.to_remove(), self._bullets))
+
+    def _collide_bullet_wall(self):
+        for bullet in self._bullets:
+            if bullet.up_coord == 0:
+                bullet.mark_to_remove()
+
     def _collide_wall_ball(self):
         for ball in self._balls:
             if ball.up_coord <= 0 and ball.is_moving_up:
@@ -346,11 +367,15 @@ class Game:
     def play(self):
         cur_lvl = 1
         self._mv_down_time = self._lvl_st_time = time()
+        bullet_launch_time = 0
         while not self._game_over:
             frame_st_time = time()
             self._screen.reset_board()
 
             self._collide_bricks_ball()
+            self._collide_bullet_brick()
+            self._collide_bullet_wall()
+            self._remove_marked_bullets()
             self._remove_dead_bricks()
 
             self._collide_wall_ball()
@@ -363,14 +388,22 @@ class Game:
 
             self._collide_ball_paddle()
 
+            if self._paddle.has_canons:
+                if time() - bullet_launch_time > cfg.BULLET_DELAY:
+                    bullet1 = Bullet(pos=(self._paddle.up_coord, self._paddle.left_coord),
+                                     vel=cfg.BULLET_VELOCITY)
+                    bullet2 = Bullet(pos=(self._paddle.up_coord, self._paddle.right_coord),
+                                     vel=cfg.BULLET_VELOCITY)
+                    self._bullets.append(bullet1)
+                    self._bullets.append(bullet2)
+                    bullet_launch_time = time()
+
+
             for brick in self._bricks:
                 brick.change_type_if_rainbow()
 
-            for ball in self._balls:
-                ball.update_pos()
-
-            for powerup in self._on_screen_powerups:
-                powerup.update_pos()
+            for obj in self._balls + self._on_screen_powerups + self._bullets:
+                obj.update_pos()
 
             for obj in self._objects:
                 self._screen.add_object(obj)
@@ -382,6 +415,7 @@ class Game:
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()
             self._render_score_board()
+            print(len(self._bullets))
 
             if self._game_over and self._game_won and cur_lvl < 3:
                 self._time_penalty += self.time_passed

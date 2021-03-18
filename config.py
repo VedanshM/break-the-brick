@@ -103,6 +103,14 @@ POWERUP_STYLES = [
     }
 ]
 
+BULLET_STYLE = {
+    'img': [['^']],
+    'fg': colorama.Fore.RED,
+    'bg': colorama.Back.LIGHTBLUE_EX
+}
+BULLET_DELAY = 2
+BULLET_VELOCITY = (-10/FPS, 0)
+
 # # for debugging
 
 # FPS = 1
