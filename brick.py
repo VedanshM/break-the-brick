@@ -39,6 +39,10 @@ class Brick(GameObject):
             self._strength = BRICK_STRENGHTS[self._kind]
             self._img = create_img(BRICKS_STYLE[self._kind])
 
+    def change_pos(self, newpos):
+        self._pos = np.array(newpos)
+        if self._powerup:
+            self._powerup.change_pos(newpos)
 
     def take_hit(self):
         self._is_rainbow = False
