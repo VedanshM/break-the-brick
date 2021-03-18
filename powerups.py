@@ -1,5 +1,7 @@
 from time import time
 from typing import Tuple
+
+import numpy as np
 from utils import create_img
 from config import POWERUP_GENERAL, POWERUP_STYLES
 import gameobject
@@ -9,7 +11,8 @@ class PowerUp(gameobject.GameObject):
     timeout = POWERUP_GENERAL['timeout']
 
     def __init__(self, img,  pos: Tuple[int, int] = (0, 0)):
-        super().__init__(image=img, pos=pos, vel=(POWERUP_GENERAL['vel']))
+        super().__init__(image=img, pos=pos,
+                         vel=(POWERUP_GENERAL['vel']), gravity=True)
         self._st_time: float = None
 
     @property
@@ -17,6 +20,9 @@ class PowerUp(gameobject.GameObject):
 
     @property
     def time_out(self): return self.timeout
+
+    def start_moving(self, vel: Tuple[int, int] = (0, 0)):
+        self._vel = np.array(vel)
 
     def activate(self, game):
         pass

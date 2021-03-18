@@ -1,14 +1,21 @@
+from config import G
+from math import cos,  sin
 from typing import Tuple
 import numpy as np
 
 
 class GameObject:
-    def __init__(self, image: np.ndarray, pos: Tuple[float] = (0, 0), vel: Tuple[float] = (0, 0)) -> None:
+    def __init__(self, image: np.ndarray,
+                 pos: Tuple[float] = (0, 0),
+                 vel: Tuple[float] = (0, 0),
+                 gravity: bool = False
+                 ) -> None:
         # pos = upperleft coord
         self._img = np.array(image)
         self._pos = np.array(pos, dtype=float)
         self._vel = np.array(vel, dtype=float)
         self._to_remove = False
+        self._gravity = gravity
 
     @property
     def pos(self): return (int(self._pos[0]), int(self._pos[1]))
@@ -18,6 +25,9 @@ class GameObject:
 
     @property
     def vely(self): return self._vel[1]
+
+    @property
+    def vel(self): return self._vel
 
     @property
     def sizex(self): return self._img.shape[0]
@@ -82,9 +92,27 @@ class GameObject:
 
     def update_pos(self):
         ''' Upadates the pos of the obj acc to the vel inside the obj '''
+        if self._gravity:
+            self._vel[0] = np.around(self._vel[0] + G, 3)
+
         self._pos = np.around(self._pos + self._vel, 3)
 
-    # @staticmethod
+    def deflect(self, theta: float = None, multi_x: float = 1, multi_y: float = 1):
+        '''changes velocity using given multipliers or deflect theta degree A-CW'''
+        if theta is None:
+            try:
+                self._vel *= (multi_x, multi_y)
+            except:
+                print(self._vel)
+                print(multi_x, multi_y)
+                raise ZeroDivisionError
+        else:
+            rot_matrix = np.array([
+                [cos(theta), sin(theta)],
+                [-sin(theta), cos(theta)]
+            ])
+            self._vel = self._vel @ rot_matrix
+        self._pos = np.array(self.pos)
 
 
 def hit(obj1: GameObject, obj2: GameObject):

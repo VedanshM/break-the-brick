@@ -25,7 +25,7 @@ class Brick(GameObject):
                  ):
         self._kind = kind
         self._strength = BRICK_STRENGHTS[kind]
-        self._powerup = None if powerup is None else (
+        self._powerup: powerups.PowerUp = None if powerup is None else (
             self.power_up_dict[powerup](pos)
         )
         self._is_exploding = kind == EXPLODING_BRICK_IDX

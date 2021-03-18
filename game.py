@@ -30,6 +30,7 @@ class Game:
 
         self._generate_init_ball_paddle()
         self._generate_init_stats()
+        self._hit_vel = (0, 0)
 
     @property
     def _objects(self):
@@ -173,6 +174,7 @@ class Game:
 
         for dead_brick in dead_list:
             if dead_brick.power_up:
+                dead_brick.power_up.start_moving(self._hit_vel)
                 self._on_screen_powerups.append(dead_brick.power_up)
 
         self._stats.score += len(dead_list)*100
@@ -228,10 +230,25 @@ class Game:
                 self._game_over = True
                 self._game_won = False
 
+    def _collide_powerups_walls(self):
+        for powerup in self._on_screen_powerups:
+            if powerup.up_coord <= 0 and powerup.is_moving_up:
+                powerup.deflect(multi_x=-1)
+            if powerup.down_coord + 1 >= self._screen.height and powerup.is_moving_down:
+                powerup.mark_to_remove()
+            if powerup.left_coord <= 0 and powerup.is_moving_left:
+                powerup.deflect(multi_y=-1)
+            if powerup.right_coord + 1 >= self._screen.width and powerup.is_moving_right:
+                powerup.deflect(multi_y=-1)
+
     def _collide_bricks_ball(self):
         for brick in self._bricks:
             for ball in self._balls:
                 hit_side = hit(ball, brick)
+
+                if not hit_side:
+                    self._hit_vel = list(ball.vel)[:2]
+
                 if hit_side in ['right', 'left']:
                     if self._thru_mode > 0:
                         brick.mark_to_remove()
@@ -336,6 +353,7 @@ class Game:
             self._deactivate_powerups()
             self._collide_paddle_powerups()
             self._remove_not_picked_powerups()
+            self._collide_powerups_walls()
 
             self._collide_ball_paddle()
 
