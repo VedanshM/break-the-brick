@@ -1,5 +1,5 @@
 from utils import create_img
-from config import BRICKS_STYLE, BRICK_STRENGHTS, EXPLODING_BRICK_IDX
+from config import BOSS_LVL, BRICKS_STYLE, BRICK_STRENGHTS, EXPLODING_BRICK_IDX
 from typing import List, Tuple
 import numpy as np
 import powerups
@@ -62,6 +62,9 @@ class Brick(GameObject):
 
 
 def bricks_layout(lvl: int = 1) -> List[Brick]:
+    # if lvl == BOSS_LVL:
+    #     return boss_layout()
+
     bricks = []
 
     for i in np.array(range(10)) + 4:
@@ -99,3 +102,7 @@ def bricks_layout(lvl: int = 1) -> List[Brick]:
             bricks.append(Brick(kind=-1, pos=(i, j)))
 
     return bricks
+
+
+def boss_layout() -> List[Brick]:
+    pass

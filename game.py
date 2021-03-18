@@ -1,6 +1,7 @@
+import math
 from bullets import Bullet
-from math import pi
-from powerups import PowerUp
+from math import inf, pi
+from powerups import PowerUp, ShootingPaddle_pu
 from typing import List
 from utils import kbhit
 from paddle import Paddle
@@ -340,6 +341,14 @@ class Game:
         disp_str = (f"Lives: {self._stats.lives} "
                     f"\t\tTime: {self.time_passed} "
                     f"\t\tScore:{self._stats.score}")
+        if self._paddle.has_canons:
+            st_time = -1
+            timeout = 0
+            for pu in self._activated_powerups:
+                if isinstance(pu, ShootingPaddle_pu):
+                    st_time = max(st_time, pu.start_time)
+                    timeout = pu.timeout
+            disp_str += f'\nShooting paddle time left: {round(timeout - (time () - st_time), 2)}s'
         print(disp_str)
 
     def _render_end_msg(self):
@@ -415,9 +424,8 @@ class Game:
             sleep(max(0, cfg.DELAY - (time() - frame_st_time)/1000))
             self._screen.render()
             self._render_score_board()
-            print(len(self._bullets))
 
-            if self._game_over and self._game_won and cur_lvl < 3:
+            if self._game_over and self._game_won and cur_lvl < cfg.BOSS_LVL:
                 self._time_penalty += self.time_passed
                 cur_lvl += 1
                 self._setup_lvl(cur_lvl)

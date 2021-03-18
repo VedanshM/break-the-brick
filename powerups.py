@@ -8,7 +8,7 @@ import gameobject
 
 
 class PowerUp(gameobject.GameObject):
-    timeout = POWERUP_GENERAL['timeout']
+    timeout:float = POWERUP_GENERAL['timeout']
 
     def __init__(self, img,  pos: Tuple[int, int] = (0, 0)):
         super().__init__(image=img, pos=pos,
