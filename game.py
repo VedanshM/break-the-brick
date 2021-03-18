@@ -5,7 +5,7 @@ from typing import List
 from utils import kbhit
 from paddle import Paddle
 from ball import Ball
-from brick import Brick, basic_brick_layout
+from brick import Brick, bricks_layout
 from gameobject import hit
 from screen import Screen
 import numpy as np
@@ -16,7 +16,7 @@ from time import sleep, time
 class Game:
     def __init__(self) -> None:
         self._screen = Screen()
-        self._bricks = basic_brick_layout()
+        self._bricks = bricks_layout(1)
 
         self._ball_released = False
         self._game_over = False
@@ -354,7 +354,7 @@ class Game:
         print(disp_str)
 
     def _setup_lvl(self, level: int = 1):
-        self._bricks = basic_brick_layout()
+        self._bricks = bricks_layout(level)
         self._generate_init_ball_paddle()
         self._ball_released = False
         for pu in self._activated_powerups:
