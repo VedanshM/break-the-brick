@@ -63,6 +63,12 @@ class Game:
     def reset_paddle_size(self):
         return self._paddle.reset_size()
 
+    def add_canons(self):
+        return self._paddle.add_canons()
+
+    def remove_canons(self):
+        return self._paddle.rem_canons()
+
     def speedup_balls(self):
         for ball in self._balls:
             ball.speed_up()

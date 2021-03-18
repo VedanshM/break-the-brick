@@ -13,7 +13,7 @@ class PowerUp(gameobject.GameObject):
     def __init__(self, img,  pos: Tuple[int, int] = (0, 0)):
         super().__init__(image=img, pos=pos,
                          vel=(POWERUP_GENERAL['vel']), gravity=True)
-        self._st_time: float = None
+        self._st_time: float = 0
 
     @property
     def start_time(self): return self._st_time
@@ -101,3 +101,15 @@ class PaddleGrab_pu(PowerUp):
 
     def deactivate(self, game):
         game.unset_paddle_grab()
+
+
+class ShootingPaddle_pu(PowerUp):
+    def __init__(self, pos: Tuple[int, int]):
+        super().__init__(img=create_img(POWERUP_STYLES[6]), pos=pos)
+
+    def activate(self, game):
+        self._st_time = time()
+        game.add_canons()
+
+    def deactivate(self, game):
+        game.remove_canons()

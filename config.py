@@ -96,6 +96,11 @@ POWERUP_STYLES = [
         'fg': colorama.Fore.MAGENTA,
         'bg':colorama.Back.LIGHTBLUE_EX
     },
+    {
+        'img': [['B']],
+        'fg': colorama.Fore.RED,
+        'bg': colorama.Back.LIGHTBLUE_EX
+    }
 ]
 
 # # for debugging
