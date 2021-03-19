@@ -11,7 +11,7 @@ G = 0.1/FPS
 
 INITIAL_LIVES = 3
 MOVE_DOWN_TIME = 3
-LVL_MSG_DELAY = 3
+LVL_MSG_DELAY = 1.4
 BOSS_LVL = 3
 
 EXPLODING_BRICK_IDX = 4
@@ -111,6 +111,13 @@ BULLET_STYLE = {
 }
 BULLET_DELAY = 2
 BULLET_VELOCITY = (-10/FPS, 0)
+
+BOSS_STYLE = {
+    'img': [['=' for _ in range(10)] for _ in range(3)],
+    'fg': colorama.Fore.YELLOW,
+    'bg': colorama.Back.RED,
+    'max_health': 20
+}
 
 # # for debugging
 

@@ -62,8 +62,8 @@ class Brick(GameObject):
 
 
 def bricks_layout(lvl: int = 1) -> List[Brick]:
-    # if lvl == BOSS_LVL:
-    #     return boss_layout()
+    if lvl == BOSS_LVL:
+        return []
 
     bricks = []
 
@@ -102,7 +102,3 @@ def bricks_layout(lvl: int = 1) -> List[Brick]:
             bricks.append(Brick(kind=-1, pos=(i, j)))
 
     return bricks
-
-
-def boss_layout() -> List[Brick]:
-    pass

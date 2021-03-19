@@ -1,3 +1,4 @@
+from boss import Boss
 import math
 from bullets import Bullet
 from math import inf, pi
@@ -34,11 +35,14 @@ class Game:
         self._generate_init_ball_paddle()
         self._generate_init_stats()
         self._hit_vel = (0, 0)
+        self._boss = None
 
     @property
     def _objects(self):
         return (self._bricks + self._balls + [self._paddle]
-                + self._on_screen_powerups + self._bullets)
+                + self._on_screen_powerups + self._bullets
+                + ([self._boss] if self._boss else [])
+                )
 
     def _generate_init_ball_paddle(self):
         self._paddle = Paddle()
@@ -188,7 +192,7 @@ class Game:
                 self._on_screen_powerups.append(dead_brick.power_up)
 
         self._stats.score += len(dead_list)*100
-        if not self._bricks:
+        if not self._bricks and not self._boss:
             self._game_over = True
             self._game_won = True
 
@@ -349,6 +353,8 @@ class Game:
                     st_time = max(st_time, pu.start_time)
                     timeout = pu.timeout
             disp_str += f'\nShooting paddle time left: {round(timeout - (time () - st_time), 2)}s'
+        if self._boss:
+            disp_str += f'\nBOSS Health: {self._boss.health}/{self._boss.MAX_HEALTH}'
         print(disp_str)
 
     def _render_end_msg(self):
@@ -362,6 +368,28 @@ class Game:
         Screen.clear_screen()
         print(disp_str)
 
+    def _collide_ball_boss(self):
+        if self._boss:
+            for ball in self._balls:
+                hit_side = hit(ball, self._boss)
+                if hit_side is not None:
+                    self._hit_vel = list(ball.vel)[:2]
+                    print(hit_side)
+                    self._boss.take_hit()
+                    if hit_side in ['right', 'left']:
+                        ball.deflect(multi_y=-1)
+                    elif hit_side in ['up', 'down']:
+                        ball.deflect(multi_x=-1)
+                    else:
+                        ball.deflect(multi_x=1, multi_y=-1)
+
+    def _position_boss(self):
+        if self._boss:
+            newpos = [3, self._paddle.pos[1]]
+            if newpos[1] + self._boss.sizey > self._screen.width:
+                newpos[1] = self._screen.width - self._boss.sizey
+            self._boss.change_pos(newpos)
+
     def _setup_lvl(self, level: int = 1):
         self._bricks = bricks_layout(level)
         self._generate_init_ball_paddle()
@@ -372,6 +400,9 @@ class Game:
         self._paddle_grab = 0
         self._activated_powerups = []
         self._on_screen_powerups = []
+        if level == cfg.BOSS_LVL:
+            self._boss = Boss()
+            self._position_boss()
 
     def play(self):
         cur_lvl = 1
@@ -407,6 +438,9 @@ class Game:
                     self._bullets.append(bullet2)
                     bullet_launch_time = time()
 
+            if self._boss:
+                self._position_boss()
+                self._collide_ball_boss()
 
             for brick in self._bricks:
                 brick.change_type_if_rainbow()
