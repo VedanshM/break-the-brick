@@ -5,7 +5,7 @@ from bullets import Bullet
 from math import inf, pi
 from powerups import PowerUp, ShootingPaddle_pu
 from typing import List
-from utils import kbhit, play_blast
+from utils import kbhit, play_ball_launch, play_blast, play_laser, play_level_up, play_paddle_hit
 from paddle import Paddle
 from ball import Ball
 from brick import Brick, bricks_layout
@@ -161,6 +161,7 @@ class Game:
             if not self._ball_released:
                 self._balls[0].update_pos(pdl=self._paddle)
         elif ch == ' ':
+            play_ball_launch()
             self._ball_released = True
             self._balls[0].start_moving()
         elif ch == 'q':
@@ -321,6 +322,7 @@ class Game:
         for ball in self._balls:
             hit_side = hit(ball, self._paddle)
             if hit_side in ['down', 'rightdown', 'leftdown']:
+                play_paddle_hit()
                 delta = (
                     ball.left_coord - self._paddle.horizontal_mid)/self._paddle.sizey
                 inci_ang = np.math.atan(abs(ball.velx/ball.vely))
@@ -473,6 +475,7 @@ class Game:
 
             if self._paddle.has_canons:
                 if time() - bullet_launch_time > cfg.BULLET_DELAY:
+                    play_laser()
                     bullet1 = Bullet(pos=(self._paddle.up_coord, self._paddle.left_coord),
                                      vel=cfg.BULLET_VELOCITY)
                     bullet2 = Bullet(pos=(self._paddle.up_coord, self._paddle.right_coord),
@@ -516,6 +519,7 @@ class Game:
             self._render_score_board()
 
             if self._game_over and self._game_won and cur_lvl < cfg.BOSS_LVL:
+                play_level_up()
                 self._time_penalty += self.time_passed
                 cur_lvl += 1
                 self._setup_lvl(cur_lvl)

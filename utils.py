@@ -25,6 +25,18 @@ def play_music(path:str):
 def play_blast():
     return play_music('./audio/blast.wav')
 
+def play_paddle_hit():
+    return play_music('./audio/paddle_hit.wav')
+
+def play_ball_launch():
+    return play_music('./audio/ball_launch.wav')
+
+def play_level_up():
+    return play_music('./audio/level_up.wav')
+
+def play_laser():
+    return play_music('./audio/laser.wav')
+
 class KBHit:
     """
     Class to handle keyboard input
