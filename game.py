@@ -5,7 +5,7 @@ from bullets import Bullet
 from math import inf, pi
 from powerups import PowerUp, ShootingPaddle_pu
 from typing import List
-from utils import kbhit, play_ball_launch, play_blast, play_laser, play_level_up, play_paddle_hit
+from utils import kbhit, play_ball_launch, play_blast, play_bounce, play_laser, play_level_up, play_paddle_hit
 from paddle import Paddle
 from ball import Ball
 from brick import Brick, bricks_layout
@@ -310,12 +310,15 @@ class Game:
     def _collide_wall_ball(self):
         for ball in self._balls:
             if ball.up_coord <= 0 and ball.is_moving_up:
+                play_bounce()
                 ball.deflect(multi_x=-1)
             if ball.down_coord + 1 >= self._screen.height and ball.is_moving_down:
                 ball.mark_to_remove()
             if ball.left_coord <= 0 and ball.is_moving_left:
+                play_bounce()
                 ball.deflect(multi_y=-1)
             if ball.right_coord + 1 >= self._screen.width and ball.is_moving_right:
+                play_bounce()
                 ball.deflect(multi_y=-1)
 
     def _collide_ball_paddle(self):

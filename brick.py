@@ -103,7 +103,7 @@ def bricks_layout(lvl: int = 1) -> List[Brick]:
                 pow_up = None
             bricks.append(Brick(kind=3, pos=(i, j),  powerup=pow_up))
 
-    for i in np.arange(2) + 7:
+    for i in np.arange(2) + 6:
         for j in np.arange(7)*brick_width + (40 if lvl == 1 else 20):
             bricks.append(Brick(kind=4, pos=(i, j)))
 

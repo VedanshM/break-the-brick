@@ -37,6 +37,10 @@ def play_level_up():
 def play_laser():
     return play_music('./audio/laser.wav')
 
+def play_bounce():
+    return play_music('./audio/bounce.wav')
+
+
 class KBHit:
     """
     Class to handle keyboard input
