@@ -36,6 +36,7 @@ class Game:
         self._generate_init_stats()
         self._hit_vel = (0, 0)
         self._boss = None
+        self._boss_layers_active = [False, False]
 
     @property
     def _objects(self):
@@ -383,6 +384,17 @@ class Game:
                     else:
                         ball.deflect(multi_x=1, multi_y=-1)
 
+    def _deploy_bricks_layer(self, layer: int = 0):
+        if not self._boss or self._boss_layers_active[layer]:
+            return
+
+        self._boss_layers_active[layer] = True
+        layer_pos = self._boss.down_coord + (2 if layer == 0 else 4)
+        for i in range(0, self._screen.width, 3):
+            self._bricks.append(
+                Brick(1, pos=(layer_pos, i))
+            )
+
     def _position_boss(self):
         if self._boss:
             if self._boss.right_coord < self._paddle.left_coord:
@@ -444,6 +456,11 @@ class Game:
             if self._boss:
                 self._position_boss()
                 self._collide_ball_boss()
+                if self._boss.health <= self._boss.HEALTH_LIM[1]:
+                    self._deploy_bricks_layer(1)
+                elif self._boss.health <= self._boss.HEALTH_LIM[0]:
+                    self._deploy_bricks_layer(0)
+
 
             for brick in self._bricks:
                 brick.change_type_if_rainbow()

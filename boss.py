@@ -7,6 +7,7 @@ from typing import Tuple
 class Boss(gameobject.GameObject):
     MAX_HEALTH = BOSS_STYLE['max_health']
     HORIZ_VEL = BOSS_STYLE['horiz_vel']
+    HEALTH_LIM = BOSS_STYLE['health_lim']
 
     def __init__(self,  pos: Tuple[float] = (0, 0), vel: Tuple[float] = (0, 0)):
         super().__init__(create_img(BOSS_STYLE), pos=pos, vel=vel)

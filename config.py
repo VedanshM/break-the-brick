@@ -11,7 +11,7 @@ G = 0.1/FPS
 
 INITIAL_LIVES = 3
 MOVE_DOWN_TIME = 3
-LVL_MSG_DELAY = 1.4
+LVL_MSG_DELAY = 0.4
 BOSS_LVL = 3
 
 EXPLODING_BRICK_IDX = 4
@@ -118,6 +118,7 @@ BOSS_STYLE = {
     'bg': colorama.Back.RED,
     'max_health': 20,
     'horiz_vel':  abs(BALL_STYLE['vel'][1]*0.9),
+    'health_lim': [19,18]
 }
 
 # # for debugging
