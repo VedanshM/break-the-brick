@@ -385,10 +385,13 @@ class Game:
 
     def _position_boss(self):
         if self._boss:
-            newpos = [3, self._paddle.pos[1]]
-            if newpos[1] + self._boss.sizey > self._screen.width:
-                newpos[1] = self._screen.width - self._boss.sizey
-            self._boss.change_pos(newpos)
+            if self._boss.right_coord < self._paddle.left_coord:
+                self._boss.set_vely(self._boss.HORIZ_VEL)
+            elif self._boss.left_coord > self._paddle.right_coord:
+                self._boss.set_vely(-self._boss.HORIZ_VEL)
+            else:
+                self._boss.set_vely(0)
+            self._boss.update_pos()
 
     def _setup_lvl(self, level: int = 1):
         self._bricks = bricks_layout(level)

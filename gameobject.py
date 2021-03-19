@@ -81,6 +81,12 @@ class GameObject:
 
     def to_remove(self): return self._to_remove
 
+    def set_vely(self, new_vel_y):
+        self._vel[1] = float(new_vel_y)
+
+    def set_velx(self, new_vel_x):
+        self._vel[0] = float(new_vel_x)
+
     def change_pos(self, newpos):
         self._pos = np.array(newpos)
 
