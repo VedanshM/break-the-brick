@@ -14,3 +14,4 @@
 - `Space` : for releasing ball.
 - `A` and `D`: for left and right movement of paddle.
 - `Q`: for ending the game in mid.
+- `V`: for level skip
