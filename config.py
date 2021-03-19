@@ -116,9 +116,9 @@ BOSS_STYLE = {
     'img': [['=' for _ in range(10)] for _ in range(3)],
     'fg': colorama.Fore.YELLOW,
     'bg': colorama.Back.RED,
-    'max_health': 20,
+    'max_health': 10,
     'horiz_vel':  abs(BALL_STYLE['vel'][1]*0.9),
-    'health_lim': [19,18]
+    'health_lim': [5,2]
 }
 
 BOMB_STYLES = {

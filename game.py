@@ -491,6 +491,9 @@ class Game:
                     bomb_drop_time = time()
                 self._collide_bomb_paddle()
                 self._remove_lost_bombs()
+                if self._boss.health == 0:
+                    self._game_over = True
+                    self._game_won = True
 
 
             for brick in self._bricks:
