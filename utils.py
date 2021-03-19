@@ -4,6 +4,7 @@ import termios
 import atexit
 from select import select
 import numpy as np
+import os
 
 
 def create_img(data):
@@ -17,6 +18,12 @@ def create_img(data):
     img = np.array(img).reshape(basic_img.shape)
     return img
 
+
+def play_music(path:str):
+    os.system(f"aplay -q '{path}' &")
+
+def play_blast():
+    return play_music('./audio/blast.wav')
 
 class KBHit:
     """

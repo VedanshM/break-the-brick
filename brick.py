@@ -60,6 +60,9 @@ class Brick(GameObject):
     @property
     def is_exploding(self): return self._is_exploding
 
+    @property
+    def is_unbreakable(self): return self._strength == BRICK_STRENGHTS[-1]
+
 
 def bricks_layout(lvl: int = 1) -> List[Brick]:
     if lvl == BOSS_LVL:
@@ -67,38 +70,45 @@ def bricks_layout(lvl: int = 1) -> List[Brick]:
 
     bricks = []
 
-    for i in np.arange(3) + 4:
-        for j in np.arange(4)*3 + 4:
-            if i == 2+4:
+    block_height = 2
+    margin_top = 4
+    margin_left = 4
+    block_width = 3
+    block_gap = 4
+    brick_width = len(BRICKS_STYLE[1]['img'][0])
+
+    for i in np.arange(block_height) + margin_top:
+        for j in np.arange(block_width)*brick_width + margin_left:
+            if i == margin_top+block_height-1:
                 pow_up = 'shoot' if j <= 7 else 'expand'
             else:
                 pow_up = None
             bricks.append(Brick(kind=1, pos=(i, j),
                                 powerup=pow_up, rainbow=(lvl == 2)))
 
-    for i in np.arange(3) + 4:
-        for j in np.arange(4)*3 + 20:
-            if i == 2+4:
+    for i in np.arange(block_height) + margin_top:
+        for j in np.arange(block_width)*brick_width + margin_left + block_width*brick_width + block_gap:
+            if i == margin_top+block_height-1:
                 pow_up = 'dup' if j <= 23 else 'fast'
             else:
                 pow_up = None
             bricks.append(Brick(kind=2, pos=(i, j),
                                 powerup=pow_up, rainbow=(lvl == 1)))
 
-    for i in np.arange(3) + 4:
-        for j in np.arange(4)*3 + 36:
-            if i == 2+4:
+    for i in np.arange(block_height) + margin_top:
+        for j in np.arange(block_width)*brick_width + margin_left +2*( block_width*brick_width + block_gap):
+            if i == margin_top+block_height-1:
                 pow_up = 'thru' if j <= 39 else 'grab'
             else:
                 pow_up = None
             bricks.append(Brick(kind=3, pos=(i, j),  powerup=pow_up))
 
     for i in np.arange(2) + 7:
-        for j in np.arange(7)*3 + (40 if lvl == 1 else 20):
+        for j in np.arange(7)*brick_width + (40 if lvl == 1 else 20):
             bricks.append(Brick(kind=4, pos=(i, j)))
 
-    for i in np.arange(3) + 4:
-        for j in np.arange(4)*3 + 52:
+    for i in np.arange(block_height) + margin_top:
+        for j in np.arange(block_width)*brick_width + margin_left + 3*(block_width*brick_width + block_gap):
             bricks.append(Brick(kind=-1, pos=(i, j)))
 
     return bricks

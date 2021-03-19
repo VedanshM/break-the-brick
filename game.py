@@ -5,7 +5,7 @@ from bullets import Bullet
 from math import inf, pi
 from powerups import PowerUp, ShootingPaddle_pu
 from typing import List
-from utils import kbhit
+from utils import kbhit, play_blast
 from paddle import Paddle
 from ball import Ball
 from brick import Brick, bricks_layout
@@ -196,7 +196,7 @@ class Game:
                 self._on_screen_powerups.append(dead_brick.power_up)
 
         self._stats.score += len(dead_list)*100
-        if not self._bricks and not self._boss:
+        if not list(filter(lambda x: not x.is_unbreakable, self._bricks)) and not self._boss:
             self._game_over = True
             self._game_won = True
 
@@ -264,8 +264,10 @@ class Game:
             for ball in self._balls:
                 hit_side = hit(ball, brick)
 
-                if not hit_side:
+                if hit_side is not None:
                     self._hit_vel = list(ball.vel)[:2]
+                    if not brick.is_unbreakable:
+                        play_blast()
 
                 if hit_side in ['right', 'left']:
                     if self._thru_mode > 0:
