@@ -47,7 +47,7 @@ BALL_STYLE = {
     'img': [["●"]],
     'fg': colorama.Fore.RED,
     'bg': colorama.Back.LIGHTYELLOW_EX,
-    'vel': (-5/FPS, -5/FPS),
+    'vel': (-10/FPS, -10/FPS),
 }
 
 PADDLE_STYLE = {
