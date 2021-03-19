@@ -16,9 +16,6 @@ class Paddle(GameObject):
         super().__init__(img, pos=pos, vel=(0, PADDLE_STYLE['init_vel']))
         self._has_canon = 0
 
-    @property
-    def horizontal_mid(self): return (self.right_coord + self.left_coord)/2
-
     def update_pos(self, to_left: bool = True):
         '''sets paddle to move left or right'''
         self._vel[1] = -abs(self._vel[1]) if to_left else abs(self._vel[1])
@@ -46,12 +43,12 @@ class Paddle(GameObject):
         ht = self._img.shape[0]
         self._img = np.full((ht, width), baseCell)
         self._add_cannon_to_img()
-    
+
     def _add_cannon_to_img(self):
         if self._has_canon:
             self._img[0][0] = self._img[0][-1] = Cell(char='Y',
-                                                  fg=colorama.Fore.LIGHTYELLOW_EX,
-                                                  bg=colorama.Back.BLACK)
+                                                      fg=colorama.Fore.LIGHTYELLOW_EX,
+                                                      bg=colorama.Back.BLACK)
 
     @property
     def has_canons(self): return self._has_canon

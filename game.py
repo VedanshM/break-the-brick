@@ -1,3 +1,4 @@
+from bomb import Bomb
 from boss import Boss
 import math
 from bullets import Bullet
@@ -37,12 +38,14 @@ class Game:
         self._hit_vel = (0, 0)
         self._boss = None
         self._boss_layers_active = [False, False]
+        self._bombs: List[Bomb] = []
 
     @property
     def _objects(self):
         return (self._bricks + self._balls + [self._paddle]
                 + self._on_screen_powerups + self._bullets
                 + ([self._boss] if self._boss else [])
+                + self._bombs
                 )
 
     def _generate_init_ball_paddle(self):
@@ -405,6 +408,28 @@ class Game:
                 self._boss.set_vely(0)
             self._boss.update_pos()
 
+    def _drop_bomb(self):
+        if not self._boss:
+            return
+        self._bombs.append(
+            Bomb(pos=(self._boss.down_coord, self._boss.horizontal_mid)))
+
+    def _collide_bomb_paddle(self):
+        for bomb in self._bombs:
+            hit_side = hit(bomb, self._paddle)
+            if hit_side is not None:
+                self._stats.lives -= 1
+                bomb.mark_to_remove()
+                if not self._stats.lives:
+                    self._game_over = True
+                    self._game_won = False
+
+    def _remove_lost_bombs(self):
+        for bomb in self._bombs:
+            if bomb.down_coord >= self._screen.height:
+                bomb.mark_to_remove()
+        self._bombs = list(filter(lambda x: not x.to_remove(), self._bombs))
+
     def _setup_lvl(self, level: int = 1):
         self._bricks = bricks_layout(level)
         self._generate_init_ball_paddle()
@@ -423,6 +448,7 @@ class Game:
         cur_lvl = 1
         self._mv_down_time = self._lvl_st_time = time()
         bullet_launch_time = 0
+        bomb_drop_time = 0
         while not self._game_over:
             frame_st_time = time()
             self._screen.reset_board()
@@ -460,12 +486,17 @@ class Game:
                     self._deploy_bricks_layer(1)
                 elif self._boss.health <= self._boss.HEALTH_LIM[0]:
                     self._deploy_bricks_layer(0)
+                if time()-bomb_drop_time > cfg.BOMB_DROP_INTERVAL:
+                    self._drop_bomb()
+                    bomb_drop_time = time()
+                self._collide_bomb_paddle()
+                self._remove_lost_bombs()
 
 
             for brick in self._bricks:
                 brick.change_type_if_rainbow()
 
-            for obj in self._balls + self._on_screen_powerups + self._bullets:
+            for obj in self._balls + self._on_screen_powerups + self._bullets + self._bombs:
                 obj.update_pos()
 
             for obj in self._objects:

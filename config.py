@@ -121,6 +121,15 @@ BOSS_STYLE = {
     'health_lim': [19,18]
 }
 
+BOMB_STYLES = {
+    'img': [['V']],
+    'fg': colorama.Fore.RED,
+    'bg': colorama.Back.BLACK,
+    'vel': (10/FPS, 0)
+}
+
+BOMB_DROP_INTERVAL =  5
+
 # # for debugging
 
 # FPS = 1

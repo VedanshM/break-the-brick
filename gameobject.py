@@ -36,6 +36,9 @@ class GameObject:
     def sizey(self): return self._img.shape[1]
 
     @property
+    def horizontal_mid(self): return (self.right_coord + self.left_coord)/2
+
+    @property
     def img(self): return self._img
 
     @property
